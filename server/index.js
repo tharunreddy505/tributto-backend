@@ -1282,6 +1282,12 @@ app.use((err, req, res, next) => {
     res.status(500).send("Internal Server Error: " + err.message);
 });
 
+// Root route (for Render health check / browser test)
+app.get("/", (req, res) => {
+    res.send("🚀 Tributoo Backend is Running Successfully");
+});
+
+
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
 });
