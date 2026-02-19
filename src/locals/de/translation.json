@@ -1,0 +1,243 @@
+{
+    "menu": {
+        "memorials": "Gedenkstätten",
+        "features": "Funktionen",
+        "testimonials": "Meinungen",
+        "pricing": "Preise",
+        "support": "Support",
+        "login": "Anmelden / Registrieren"
+    },
+    "hero": {
+        "title_line1": "FEIERN SIE EIN LEBEN",
+        "title_line2": "WUNDERSCHÖN GELEBT",
+        "subtitle": "Erstellen Sie eine dauerhafte, schöne Seite, auf der Freunde und Familie Erinnerungen, Fotos und Geschichten teilen können – und bewahren Sie ihr Vermächtnis für die kommenden Jahre.",
+        "cta_create": "Gedenkstätte erstellen",
+        "cta_watch": "Wie es funktioniert",
+        "scroll_down": "Nach unten scrollen"
+    },
+    "features": {
+        "title_line1": "Alles, was Sie brauchen, um",
+        "title_line2": "ihr Vermächtnis zu ehren",
+        "items": {
+            "unlimited": {
+                "title": "Unbegrenzter Speicherplatz",
+                "desc": "Fügen Sie so viele Fotos, Videos und Geschichten hinzu, wie Sie möchten. Keine Grenzen für Erinnerungen."
+            },
+            "privacy": {
+                "title": "Vollständige Privatsphäre",
+                "desc": "Wählen Sie, wer sehen und beitragen kann. Öffentlich, privat oder nur auf Einladung."
+            },
+            "sharing": {
+                "title": "Einfaches Teilen",
+                "desc": "Teilen Sie mit einem einfachen Link. Freunde und Familie können besuchen, ohne ein Konto zu erstellen."
+            },
+            "galleries": {
+                "title": "Schöne Fotogalerien",
+                "desc": "Präsentieren Sie geschätzte Momente in eleganten, responsiven Fotogalerien."
+            },
+            "messages": {
+                "title": "Kondolenznachrichten",
+                "desc": "Lassen Sie geliebte Menschen herzliche Nachrichten hinterlassen und ihre eigenen Erinnerungen teilen."
+            },
+            "dates": {
+                "title": "Wichtige Daten",
+                "desc": "Erinnern Sie sich gemeinsam an Geburtstage, Jubiläen und besondere Meilensteine."
+            },
+            "no_ads": {
+                "title": "Keine Werbung, jemals",
+                "desc": "Ein respektvolles, werbefreies Erlebnis, das Ihren geliebten Menschen mit Würde ehrt."
+            },
+            "premium": {
+                "title": "Premium Qualität",
+                "desc": "Professionelles Design, das die Fürsorge und Liebe widerspiegelt, die Sie ausdrücken möchten."
+            }
+        },
+        "stats": {
+            "created": "Gedenkstätten erstellt",
+            "uptime": "Verfügbarkeitsgarantie",
+            "support": "Support verfügbar"
+        }
+    },
+    "tributes": {
+        "title_line1": "Wunderschöne Tribute an",
+        "title_line2": "bemerkenswerte Leben",
+        "description": "Sehen Sie, wie Familien überall Erinnerungen bewahren und ihre geliebten Menschen feiern.",
+        "view_memorial": "Gedenkstätte ansehen"
+    },
+    "creation": {
+        "title_line1": "Eine Gedenkstätte zu erstellen ist",
+        "title_line2": "einfach und bedeutungsvoll",
+        "description": "Nur wenige Schritte, um einen schönen Ort für Erinnerungen zu schaffen.",
+        "trust_text": "Vertrauen, Fürsorge und Liebe sind in jedes Pixel dessen eingewoben, was wir bauen."
+    },
+    "why_choose": {
+        "title_line1": "Warum",
+        "title_line2": "Tributtoo wählen",
+        "description": "Wir haben jedes Detail durchdacht gestaltet, um Ihnen zu helfen, Ihren geliebten Menschen mit Anmut und Schönheit zu ehren.",
+        "items": {
+            "forever": {
+                "title": "Für immer in Erinnerung",
+                "text": "Schaffen Sie einen zeitlosen Raum, in dem Erinnerungen weiterleben, jederzeit und überall zugänglich, für kommende Generationen."
+            },
+            "together": {
+                "title": "Menschen zusammenbringen",
+                "text": "Laden Sie Familie und Freunde ein, Geschichten, Fotos und Erinnerungen an einem schönen Ort zu teilen."
+            },
+            "easy": {
+                "title": "Einfach zu erstellen",
+                "text": "Richten Sie in wenigen Minuten eine bedeutungsvolle Gedenkstätte mit unserem intuitiven, mitfühlenden Design ein."
+            },
+            "private": {
+                "title": "Privat & Sicher",
+                "text": "Kontrollieren Sie, wer sehen und beitragen kann. Ihre Erinnerungen werden mit Sorgfalt und Respekt geschützt."
+            },
+            "designed": {
+                "title": "Wunderschön gestaltet",
+                "text": "Premium, elegante Vorlagen, die Ihren geliebten Menschen mit der Würde ehren, die sie verdienen."
+            },
+            "share": {
+                "title": "Überall teilen",
+                "text": "Teilen Sie Ihre Gedenkseite ganz einfach mit einem Link. Kein Konto zum Anzeigen erforderlich."
+            }
+        }
+    },
+    "faq": {
+        "title_line1": "Fragen, die Sie",
+        "title_line2": "haben könnten",
+        "description": "Alles, was Sie über das Erstellen eines Tributs wissen müssen.",
+        "questions": {
+            "q1": {
+                "q": "Wie lange bleibt die Gedenkseite bestehen?",
+                "a": "Ihre Gedenkseite bleibt auf unbestimmte Zeit erhalten. Wir verpflichten uns, Ihre Erinnerungen für kommende Generationen sicher aufzubewahren."
+            },
+            "q2": {
+                "q": "Kann ich kontrollieren, wer die Gedenkseite sieht?",
+                "a": "Ja, Sie haben die volle Kontrolle. Sie können die Seite öffentlich, privat (passwortgeschützt) oder nur für eingeladene Gäste sichtbar machen."
+            },
+            "q3": {
+                "q": "Wie lade ich Familie und Freunde ein, beizutragen?",
+                "a": "Sie können einen einfachen Link per E-Mail, Text oder soziale Medien teilen. Gäste können Fotos und Geschichten beitragen, ohne ein Konto erstellen zu müssen."
+            },
+            "q4": {
+                "q": "Gibt es ein Limit für Fotos und Videos, die ich hochladen kann?",
+                "a": "Nein, wir bieten unbegrenzten Speicherplatz für Fotos, Videos und Geschichten. Sie können so viele Erinnerungen bewahren, wie Sie möchten."
+            },
+            "q5": {
+                "q": "Kann ich die Gedenkseite nach der Erstellung bearbeiten?",
+                "a": "Absolut. Sie können Text bearbeiten, Fotos hinzufügen oder entfernen und Einstellungen jederzeit als Administrator der Seite ändern."
+            },
+            "q6": {
+                "q": "Was passiert, wenn ich Hilfe oder Unterstützung benötige?",
+                "a": "Unser Support-Team ist rund um die Uhr verfügbar. Sie können uns jederzeit erreichen, und wir helfen Ihnen bei Fragen oder technischen Problemen."
+            },
+            "q7": {
+                "q": "Wie viel kostet Tributoo?",
+                "a": "Wir bieten einen kostenlosen Plan für den Einstieg. Unsere Premium-Funktionen, einschließlich unbegrenztem Speicherplatz und erweiterter Privatsphäre, sind gegen eine einmalige Zahlung verfügbar."
+            },
+            "q8": {
+                "q": "Kann ich meine Gedenkseite herunterladen oder exportieren?",
+                "a": "Ja, Sie können jederzeit ein komplettes Archiv aller Fotos, Videos und Nachrichten herunterladen, die auf Ihrer Gedenkseite geteilt wurden."
+            }
+        }
+    },
+    "footer": {
+        "cta_title_line1": "Ihre Geschichte verdient es,",
+        "cta_title_line2": "erinnert zu werden",
+        "cta_title_line2_italic": "wunderschön",
+        "cta_desc": "Erstellen Sie einen dauerhaften Tribut, der ihr Leben feiert, wertvolle Erinnerungen bewahrt und allen Trost spendet, die sie kannten.",
+        "button_create": "Gedenkstätte erstellen",
+        "button_learn": "Mehr erfahren",
+        "note": "Kostenlos starten • Keine Kreditkarte erforderlich • Jederzeit kündbar",
+        "privacy": "Datenschutz",
+        "terms": "AGB",
+        "contact": "Kontakt",
+        "copyright": "© {{year}} Tributto. Alle Rechte vorbehalten."
+    },
+    "auth": {
+        "login": "Anmelden",
+        "register": "Registrieren",
+        "username": "Benutzername",
+        "password": "Passwort",
+        "email": "Geben Sie Ihre E-Mail-Adresse ein",
+        "company_name": "Firmenname",
+        "choose_role": "Rolle wählen",
+        "role_private": "Privat",
+        "role_company": "Firma",
+        "visible": "Sichtbar",
+        "upload_logo": "Laden Sie Ihr Logo hoch",
+        "max_file_size": "Maximale Dateigröße: 64 MB.",
+        "description_placeholder": "Kurze Beschreibung Ihrer Firma (Sie können dies später bearbeiten)",
+        "terms_agree": "Ich stimme Ihren",
+        "terms_link": "Allgemeinen Geschäftsbedingungen zu",
+        "privacy_text": "Wir verwenden Ihre persönlichen Daten, um Ihnen das bestmögliche Erlebnis auf unserer Website zu bieten, Ihren Kontozugang zu verwalten und für andere Zwecke, die in unserer",
+        "privacy_link": "Datenschutzrichtlinie erklärt werden",
+        "forgot_password": "Passwort vergessen?",
+        "remember_me": "Erinnern Sie sich an mich",
+        "try_now": "Jetzt testen – keine Kreditkarte erforderlich",
+        "enter_username": "Geben Sie Ihren Benutzernamen ein",
+        "enter_password": "Geben Sie Ihr Passwort ein",
+        "choose_username_company": "Wählen Sie Ihren Benutzernamen oder Firmennamen",
+        "enter_company_name": "Geben Sie Ihren Firmennamen ein"
+    },
+    "memorials_list": {
+        "title": "Gedenkseiten",
+        "subtitle": "Leben ehren, Erinnerungen bewahren",
+        "loading": "Gedenkstätten werden geladen..."
+    },
+    "memorial_page": {
+        "loading": "Erinnerungen werden geladen...",
+        "born": "Geboren",
+        "passed": "Gestorben",
+        "life_story_title": "Ein wunderschön gelebtes Leben",
+        "memories_title": "Wertvolle Erinnerungen",
+        "memories_subtitle": "Momente, die in der Zeit eingefroren sind",
+        "no_photos": "Noch keine Fotos hochgeladen.",
+        "photo_quote": "Jedes Foto erzählt eine Geschichte der Liebe",
+        "videos_title": "Bewegende Erinnerungen",
+        "videos_subtitle": "Ihr Lachen, ihre Stimme, für immer bewahrt",
+        "no_videos": "Noch keine Videos hochgeladen.",
+        "tributes_title": "Worte aus dem Herzen",
+        "tributes_subtitle": "Liebesbriefe von denen, deren Leben sie mit ihrer Anmut berührt hat.",
+        "leave_message_title": "Teilen Sie Ihre Erinnerungen und Beileidsbekundungen",
+        "leave_message_button": "Eine Nachricht hinterlassen",
+        "share_title": "Teilen Sie dieses Denkmal",
+        "share_subtitle": "Bewahrt ihr Andenken, indem ihr es mit Familie und Freunden teilt.",
+        "scan_qr": "Scannen Sie, um die Gedenkstätte zu besuchen",
+        "memorial_link": "Gedenklink",
+        "copy_button": "Kopieren",
+        "public_memorial": "Dieses Denkmal ist Öffentlich",
+        "public_desc": "Jeder, der den Link hat, kann es ansehen",
+        "share_footer": "Teile diese Seite, um ihr schönes Leben zu ehren.",
+        "in_loving_memory": "In Liebevoller Erinnerung",
+        "created_with_love": "Mit Liebe kreiert von",
+        "honoring_lives": "Leben ehren, Erinnerungen bewahren",
+        "condolence_book": "Kondolenzbuch",
+        "your_name": "Ihr Name",
+        "your_message": "Ihre Nachricht",
+        "add_button": "Hinzufügen",
+        "created_by": "Mit Liebe kreiert",
+        "tagline": "Leben ehren, Erinnerungen bewahren",
+        "bio_fallback": "Eleanor Rose Mitchell war ein leuchtendes Beispiel für Herzlichkeit, Weisheit und unerschütterliche Liebe. Geboren in einer kleinen Küstenstadt in Maine, wuchs sie umgeben vom Rhythmus des Meeres und der Geborgenheit ihrer Familie auf.",
+        "memory_item": "Erinnerung {{count}}",
+        "video_item": "Video {{count}}",
+        "demo_photo_0": "Familienerinnerungen",
+        "demo_photo_1": "Vintage-Familientreffen",
+        "demo_photo_2": "Mit Enkelkindern",
+        "demo_photo_3": "Garten, den sie liebte",
+        "demo_photo_4": "Friedlicher Moment",
+        "demo_photo_5": "Porträt",
+        "demo_video_0": "Familientreffen 2024",
+        "demo_video_1": "Feier zum 80. Geburtstag",
+        "demo_video_2": "Gartentour",
+        "demo_comment_0_text": "Mama, du warst mein Leitstern, mein sicherer Hafen und meine größte Lehrmeisterin. Deine Liebe hat mich zu dem Menschen gemacht, der ich heute bin. Ich vermisse dich jeden einzelnen Tag.",
+        "demo_comment_1_text": "Frau Mitchell war die Lehrerin, die mein Leben verändert hat. Sie glaubte an mich, als ich selbst nicht mehr an mich glaubte. Ihre Freundlichkeit und Ermutigung gaben mir das Selbstvertrauen, meine Träume zu verfolgen.",
+        "demo_comment_2_text": "Eleanor, meine liebe Freundin seit 40 Jahren. Wir haben so viel gelacht, geweint und so viele Tassen Tee in deinem wunderschönen Garten getrunken. Deine Weisheit, deine Herzlichkeit und...",
+        "demo_comment_3_text": "Oma, jeder Besuch bei dir war ein unvergessliches Erlebnis. Vom gemeinsamen Plätzchenbacken bis zu deinen Gutenachtgeschichten – du hast meine Kindheit mit so viel Liebe und Freude erfüllt. Ich verspreche dir, die Güte und Liebe...",
+        "bio_p1": "Schon früh zeigte {{firstName}} ein natürliches Talent dafür, Menschen zusammenzubringen, sei es durch ihr ansteckendes Lachen oder ihre außergewöhnlichen Backkünste, die jedes Treffen zu einem Fest machten.",
+        "bio_p2": "Nach ihrem mit Auszeichnung abgeschlossenen Anglistikstudium widmete sie ihr Leben dem Unterrichten. Sie war überzeugt, dass jedes Kind eine Geschichte zu erzählen hat und setzte sich mit ganzer Kraft dafür ein.",
+        "bio_p3": "{{firstName}}'s größte Freude war ihre Familie. 52 wundervolle Jahre lang war sie eine treue Ehefrau, eine fürsorgliche Mutter und eine liebevolle Großmutter. Ihr Haus stand immer offen.",
+        "bio_quote": "Eine so sanfte Seele, ein so reines Herz",
+        "closing_quote": "Diejenigen, die wir lieben, gehen nicht fort, sie begleiten uns jeden Tag.",
+        "closing_tribute": "{{firstName}}'s Licht wird durch die Liebe, die sie schenkte, die Weisheit, die sie weitergab, und die unzähligen Leben, die sie berührte, weiterleuchten. Ihr Andenken sei allen, die sie kannten, ein Segen."
+    }
+}

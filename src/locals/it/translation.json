@@ -1,0 +1,243 @@
+{
+    "menu": {
+        "memorials": "Memoriali",
+        "features": "Caratteristiche",
+        "testimonials": "Testimonianze",
+        "pricing": "Prezzi",
+        "support": "Supporto",
+        "login": "Accedi / Registrati"
+    },
+    "hero": {
+        "title_line1": "CELEBRA UNA VITA",
+        "title_line2": "VISSUTA MERAVIGLIOSAMENTE",
+        "subtitle": "Crea una pagina duratura e bellissima dove amici e familiari possono condividere ricordi, foto e storie—preservando la loro eredità per gli anni a venire.",
+        "cta_create": "Crea un Tributo",
+        "cta_watch": "Guarda come funziona",
+        "scroll_down": "Scorri in basso"
+    },
+    "features": {
+        "title_line1": "Tutto ciò di cui hai bisogno per",
+        "title_line2": "onorare la loro eredità",
+        "items": {
+            "unlimited": {
+                "title": "Archiviazione illimitata",
+                "desc": "Aggiungi tutte le foto, i video e le storie che desideri. Nessun limite ai ricordi."
+            },
+            "privacy": {
+                "title": "Controllo completo della privacy",
+                "desc": "Scegli chi può vedere e contribuire. Opzioni pubbliche, private o solo su invito."
+            },
+            "sharing": {
+                "title": "Condivisione facile",
+                "desc": "Condividi con un semplice link. Amici e familiari possono visitare senza creare un account."
+            },
+            "galleries": {
+                "title": "Bellissime gallerie fotografiche",
+                "desc": "Mostra i momenti preziosi in gallerie fotografiche eleganti e responsive."
+            },
+            "messages": {
+                "title": "Messaggi di condoglianze",
+                "desc": "Lascia che i cari lascino messaggi sentiti e condividano i propri ricordi."
+            },
+            "dates": {
+                "title": "Date importanti",
+                "desc": "Ricorda compleanni, anniversari e traguardi speciali insieme."
+            },
+            "no_ads": {
+                "title": "Nessuna pubblicità, mai",
+                "desc": "Un'esperienza rispettosa e senza pubblicità che onora il tuo caro con dignità."
+            },
+            "premium": {
+                "title": "Qualità Premium",
+                "desc": "Design professionale che riflette la cura e l'amore che vuoi esprimere."
+            }
+        },
+        "stats": {
+            "created": "Pagine di memoriale create",
+            "uptime": "Garanzia di uptime",
+            "support": "Supporto disponibile"
+        }
+    },
+    "tributes": {
+        "title_line1": "Bellissimi tributi a",
+        "title_line2": "vite memorabili",
+        "description": "Vedi come le famiglie ovunque preservano i ricordi e celebrano i loro cari.",
+        "view_memorial": "Visualizza il memoriale"
+    },
+    "creation": {
+        "title_line1": "Creare un memoriale è",
+        "title_line2": "semplice e significativo",
+        "description": "Solo pochi passi per creare un luogo bellissimo in cui vivono i ricordi.",
+        "trust_text": "Fiducia, cura e amore sono intrecciati in ogni pixel di ciò che costruiamo."
+    },
+    "why_choose": {
+        "title_line1": "Perché scegliere",
+        "title_line2": "Tributtoo",
+        "description": "Abbiamo progettato attentamente ogni dettaglio per aiutarti a onorare il tuo caro con grazia e bellezza.",
+        "items": {
+            "forever": {
+                "title": "Ricordati per sempre",
+                "text": "Crea uno spazio senza tempo in cui i ricordi vivono, accessibili in qualsiasi momento e luogo, per le generazioni future."
+            },
+            "together": {
+                "title": "Unisci le persone",
+                "text": "Invita familiari e amici a condividere storie, foto e ricordi in un unico bellissimo luogo."
+            },
+            "easy": {
+                "title": "Facile da creare",
+                "text": "Crea un memoriale significativo in pochi minuti con il nostro design intuitivo e compassionevole."
+            },
+            "private": {
+                "title": "Privato e sicuro",
+                "text": "Controlla chi può vedere e contribuire. I tuoi ricordi sono protetti con cura e rispetto."
+            },
+            "designed": {
+                "title": "Design bellissimo",
+                "text": "Modelli premium ed eleganti che onorano il tuo caro con la dignità che meritano."
+            },
+            "share": {
+                "title": "Condividi ovunque",
+                "text": "Condividi facilmente la tua pagina commemorativa con un semplice link. Nessun account necessario per visualizzare."
+            }
+        }
+    },
+    "faq": {
+        "title_line1": "Domande che",
+        "title_line2": "potresti avere",
+        "description": "Tutto quello che c'è da sapere sulla creazione di un tributo.",
+        "questions": {
+            "q1": {
+                "q": "Quanto durerà la pagina commemorativa?",
+                "a": "La tua pagina commemorativa è preservata a tempo indeterminato. Ci impegniamo a mantenere i tuoi ricordi al sicuro per le generazioni future."
+            },
+            "q2": {
+                "q": "Posso controllare chi vede la pagina commemorativa?",
+                "a": "Sì, hai il controllo completo. Puoi rendere la pagina pubblica, privata (protetta da password) o visibile solo agli ospiti invitati."
+            },
+            "q3": {
+                "q": "Come invito familiari e amici a contribuire?",
+                "a": "Puoi condividere un semplice link via email, SMS o social media. Gli ospiti possono contribuire con foto e storie senza dover creare un account."
+            },
+            "q4": {
+                "q": "C'è un limite alle foto e ai video che posso caricare?",
+                "a": "No, offriamo spazio illimitato per foto, video e storie. Puoi conservare tutti i ricordi che desideri."
+            },
+            "q5": {
+                "q": "Posso modificare la pagina commemorativa dopo averla creata?",
+                "a": "Assolutamente. Puoi modificare il testo, aggiungere o rimuovere foto e modificare le impostazioni in qualsiasi momento come amministratore della pagina."
+            },
+            "q6": {
+                "q": "Cosa succede se ho bisogno di aiuto o supporto?",
+                "a": "Il nostro team di supporto è disponibile 24/7. Puoi contattarci in qualsiasi momento e ti aiuteremo con qualsiasi domanda o problema tecnico."
+            },
+            "q7": {
+                "q": "Quanto costa Tributtoo?",
+                "a": "Offriamo un piano gratuito per iniziare. Le nostre funzionalità premium, incluso l'archiviazione illimitata e la privacy avanzata, sono disponibili per un pagamento unico."
+            },
+            "q8": {
+                "q": "Posso scaricare o esportare la mia pagina commemorativa?",
+                "a": "Sì, puoi scaricare un archivio completo di tutte le foto, i video e i messaggi condivisi sulla tua pagina commemorativa in qualsiasi momento."
+            }
+        }
+    },
+    "footer": {
+        "cta_title_line1": "La loro storia merita di essere",
+        "cta_title_line2": "ricordata",
+        "cta_title_line2_italic": "meravigliosamente",
+        "cta_desc": "Crea un tributo duraturo che celebri la loro vita, preservi ricordi preziosi e porti conforto a tutti coloro che li conoscevano.",
+        "button_create": "Crea un Memoriale",
+        "button_learn": "Scopri di più",
+        "note": "Gratuito per iniziare • Nessuna carta di credito richiesta • Cancella in qualsiasi momento",
+        "privacy": "Privacy",
+        "terms": "Termini",
+        "contact": "Contatto",
+        "copyright": "© {{year}} Tributto. Tutti i diritti riservati."
+    },
+    "auth": {
+        "login": "Accedi",
+        "register": "Registrati",
+        "username": "Nome utente",
+        "password": "Password",
+        "email": "Inserisci il tuo indirizzo email",
+        "company_name": "Nome azienda",
+        "choose_role": "Scegli ruolo",
+        "role_private": "Privato",
+        "role_company": "Azienda",
+        "visible": "Visibile",
+        "upload_logo": "Carica il tuo logo",
+        "max_file_size": "Dimensione massima file: 64 MB.",
+        "description_placeholder": "Breve descrizione della tua azienda (puoi modificarla anche dopo)",
+        "terms_agree": "Accetto i tuoi",
+        "terms_link": "termini e condizioni",
+        "privacy_text": "Utilizziamo le tue informazioni personali per offrirti la migliore esperienza possibile sul nostro sito web, per gestire l'accesso al tuo account e per altri scopi spiegati nella nostra",
+        "privacy_link": "informativa sulla privacy",
+        "forgot_password": "Password dimenticata?",
+        "remember_me": "Ricordami",
+        "try_now": "Provalo ora – nessuna carta di credito richiesta",
+        "enter_username": "Inserisci il tuo nome utente",
+        "enter_password": "Inserisci la tua password",
+        "choose_username_company": "Scegli il tuo nome utente o nome azienda",
+        "enter_company_name": "Inserisci il nome della tua azienda"
+    },
+    "memorials_list": {
+        "title": "Pagine Commemorative",
+        "subtitle": "Onorare vite, preservare ricordi",
+        "loading": "Caricamento memoriali..."
+    },
+    "memorial_page": {
+        "loading": "Caricamento ricordi...",
+        "born": "Nato",
+        "passed": "Deceduto",
+        "life_story_title": "Una vita vissuta magnificamente",
+        "memories_title": "Ricordi preziosi",
+        "memories_subtitle": "Momenti congelati nel tempo",
+        "no_photos": "Nessuna foto caricata ancora.",
+        "photo_quote": "Ogni foto racconta una storia d'amore",
+        "videos_title": "Ricordi in movimento",
+        "videos_subtitle": "La loro risata, la loro voce, conservata per sempre",
+        "no_videos": "Nessun video caricato ancora.",
+        "tributes_title": "Parole dal cuore",
+        "tributes_subtitle": "Lettere d'amore da coloro le cui vite hanno toccato con grazia.",
+        "leave_message_title": "Condividi i tuoi ricordi e condoglianze",
+        "leave_message_button": "Lascia un messaggio",
+        "share_title": "Condividi questo memoriale",
+        "share_subtitle": "Preserva la loro memoria condividendo con famiglia e amici.",
+        "scan_qr": "Scansiona per visitare il memoriale",
+        "memorial_link": "Link del memoriale",
+        "copy_button": "Copia",
+        "public_memorial": "Questo memoriale è pubblico",
+        "public_desc": "Chiunque abbia il link può visualizzarlo",
+        "share_footer": "Condividi questa pagina per onorare la loro bellissima vita.",
+        "in_loving_memory": "In affettuoso ricordo",
+        "created_with_love": "Creato con amore da",
+        "honoring_lives": "Onorare vite, preservare ricordi",
+        "condolence_book": "Libro delle condoglianze",
+        "your_name": "Il tuo nome",
+        "your_message": "Il tuo messaggio",
+        "add_button": "Aggiungi",
+        "created_by": "Creato con amore",
+        "tagline": "Onorare la vita, preservare i ricordi",
+        "bio_fallback": "Eleanor Rose Mitchell è stata un esempio splendente di calore, saggezza e amore incrollabile. Nata in una piccola città costiera del Maine, è cresciuta circondata dal ritmo del mare e dal conforto della sua famiglia.",
+        "memory_item": "Ricordo {{count}}",
+        "video_item": "Video {{count}}",
+        "demo_photo_0": "Ricordi di famiglia",
+        "demo_photo_1": "Riunione di famiglia vintage",
+        "demo_photo_2": "Con i nipoti",
+        "demo_photo_3": "Il giardino che amava",
+        "demo_photo_4": "Momento di pace",
+        "demo_photo_5": "Ritratto",
+        "demo_video_0": "Riunione di famiglia 2024",
+        "demo_video_1": "Festa per l'80° compleanno",
+        "demo_video_2": "Tour del giardino",
+        "demo_comment_0_text": "Mamma, sei stata la mia stella guida, il mio porto sicuro e la mia più grande insegnante. Il tuo amore mi ha reso la persona che sono oggi. Mi manchi ogni singolo giorno.",
+        "demo_comment_1_text": "La signora Mitchell è stata l'insegnante che mi ha cambiato la vita. Ha creduto in me quando io non ci credevo. La sua gentilezza e il suo incoraggiamento mi hanno dato la fiducia per perseguire i miei sogni.",
+        "demo_comment_2_text": "Eleanor, mia cara amica da 40 anni. Abbiamo riso così tanto, pianto così tanto e bevuto innumerevoli tazze di tè nel tuo bellissimo giardino. La tua saggezza, il tuo calore e...",
+        "demo_comment_3_text": "Nonna, ogni visita da te è stata un'esperienza indimenticabile. Dal preparare i biscotti insieme alle storie della buonanotte, hai riempito la mia infanzia di tanto amore e gioia. Prometto di portare avanti la tua...",
+        "bio_p1": "Fin da piccola, {{firstName}} ha mostrato un talento naturale nel riunire le persone, sia attraverso la sua risata contagiosa che le sue straordinarie abilità culinarie che rendevano ogni incontro una festa.",
+        "bio_p2": "Dopo essersi laureata con lode in studi inglesi, ha dedicato la sua vita all'insegnamento. Era convinta che ogni bambino avesse una storia da raccontare e si è impegnata con tutta se stessa in questo credo.",
+        "bio_p3": "La gioia più grande di {{firstName}} era la sua famiglia. Per 52 anni meravigliosi, è stata una moglie devota, una madre premurosa e una nonna amorevole. La sua casa era sempre aperta.",
+        "bio_quote": "Un'anima così gentile, un cuore così puro",
+        "closing_quote": "Coloro che amiamo non se ne vanno, ci camminano accanto ogni giorno.",
+        "closing_tribute": "La luce di {{firstName}} continuerà a brillare attraverso l'amore che ha donato, la saggezza che ha condiviso e le innumerevoli vite che ha toccato. Che il suo ricordo sia una benedizione per tutti coloro che l'hanno conosciuta."
+    }
+}

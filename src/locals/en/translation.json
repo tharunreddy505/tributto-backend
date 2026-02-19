@@ -1,0 +1,243 @@
+{
+    "menu": {
+        "memorials": "Memorials",
+        "features": "Features",
+        "testimonials": "Testimonials",
+        "pricing": "Pricing",
+        "support": "Support",
+        "login": "Login / Register"
+    },
+    "hero": {
+        "title_line1": "CELEBRATE A LIFE",
+        "title_line2": "BEAUTIFULLY LIVED",
+        "subtitle": "Create a lasting, beautiful page where friends and family can share memories, photos, and stories—preserving their legacy for years to come.",
+        "cta_create": "Create a Tribute",
+        "cta_watch": "Watch How It Works",
+        "scroll_down": "Scroll Down"
+    },
+    "features": {
+        "title_line1": "Everything you need to",
+        "title_line2": "honor their legacy",
+        "items": {
+            "unlimited": {
+                "title": "Unlimited Storage",
+                "desc": "Add as many photos, videos, and stories as you like. No limits on memories."
+            },
+            "privacy": {
+                "title": "Complete Privacy Control",
+                "desc": "Choose who can view and contribute. Public, private, or invite-only options."
+            },
+            "sharing": {
+                "title": "Easy Sharing",
+                "desc": "Share with one simple link. Friends and family can visit without creating an account."
+            },
+            "galleries": {
+                "title": "Beautiful Photo Galleries",
+                "desc": "Showcase cherished moments in elegant, responsive photo galleries."
+            },
+            "messages": {
+                "title": "Condolence Messages",
+                "desc": "Let loved ones leave heartfelt messages and share their own memories."
+            },
+            "dates": {
+                "title": "Important Dates",
+                "desc": "Remember birthdays, anniversaries, and special milestones together."
+            },
+            "no_ads": {
+                "title": "No Ads, Ever",
+                "desc": "A respectful, ad-free experience that honors your loved one with dignity."
+            },
+            "premium": {
+                "title": "Premium Quality",
+                "desc": "Professional design that reflects the care and love you want to express."
+            }
+        },
+        "stats": {
+            "created": "Memorial Pages Created",
+            "uptime": "Uptime Guarantee",
+            "support": "Support Available"
+        }
+    },
+    "tributes": {
+        "title_line1": "Beautiful tributes to",
+        "title_line2": "remarkable lives",
+        "description": "See how families everywhere are preserving memories and celebrating their loved ones.",
+        "view_memorial": "View memorial"
+    },
+    "creation": {
+        "title_line1": "Creating a memorial is",
+        "title_line2": "simple and meaningful",
+        "description": "Just a few steps to create a beautiful place for memories to live.",
+        "trust_text": "Trust, caring, and love are woven into every pixel of what we build."
+    },
+    "why_choose": {
+        "title_line1": "Why choose",
+        "title_line2": "Tributtoo",
+        "description": "We've thoughtfully designed every detail to help you honor your loved one with grace and beauty.",
+        "items": {
+            "forever": {
+                "title": "Forever Remembered",
+                "text": "Create a timeless space where memories live on, accessible anytime, anywhere, for generations to come."
+            },
+            "together": {
+                "title": "Bring People Together",
+                "text": "Invite family and friends to share stories, photos, and memories in one beautiful place."
+            },
+            "easy": {
+                "title": "Easy to Create",
+                "text": "Set up a meaningful memorial in minutes with our intuitive, compassionate design."
+            },
+            "private": {
+                "title": "Private & Secure",
+                "text": "Control who can view and contribute. Your memories are protected with care and respect."
+            },
+            "designed": {
+                "title": "Beautifully Designed",
+                "text": "Premium, elegant templates that honor your loved one with the dignity they deserve."
+            },
+            "share": {
+                "title": "Share Anywhere",
+                "text": "Easily share your memorial page with a simple link. No account required to view."
+            }
+        }
+    },
+    "faq": {
+        "title_line1": "Questions you",
+        "title_line2": "may have",
+        "description": "Everything you need to know about creating a tribute.",
+        "questions": {
+            "q1": {
+                "q": "How long will the memorial page last?",
+                "a": "Your memorial page is preserved indefinitely. We are committed to keeping your memories safe for generations to come."
+            },
+            "q2": {
+                "q": "Can I control who sees the memorial page?",
+                "a": "Yes, you have complete control. You can make the page public, private (password protected), or visible only to invited guests."
+            },
+            "q3": {
+                "q": "How do I invite family and friends to contribute?",
+                "a": "You can share a simple link via email, text, or social media. Guests can contribute photos and stories without needing to create an account."
+            },
+            "q4": {
+                "q": "Is there a limit to photos and videos I can upload?",
+                "a": "No, we offer unlimited storage for photos, videos, and stories. You can preserve as many memories as you wish."
+            },
+            "q5": {
+                "q": "Can I edit the memorial page after creating it?",
+                "a": "Absolutely. You can edit text, add or remove photos, and change settings at any time as the page administrator."
+            },
+            "q6": {
+                "q": "What happens if I need help or support?",
+                "a": "Our support team is available 24/7. You can reach out to us anytime, and we will help you with any questions or technical issues."
+            },
+            "q7": {
+                "q": "How much does Tributoo cost?",
+                "a": "We offer a free plan to get started. Our premium features, including unlimited storage and advanced privacy, are available for a one-time payment."
+            },
+            "q8": {
+                "q": "Can I download or export my memorial page?",
+                "a": "Yes, you can download a complete archive of all photos, videos, and messages shared on your memorial page at any time."
+            }
+        }
+    },
+    "footer": {
+        "cta_title_line1": "Their story deserves to be",
+        "cta_title_line2": "remembered",
+        "cta_title_line2_italic": "beautifully",
+        "cta_desc": "Create a lasting tribute that celebrates their life, preserves precious memories, and brings comfort to all who knew them.",
+        "button_create": "Create a Memorial",
+        "button_learn": "Learn More",
+        "note": "Free to start • No credit card required • Cancel anytime",
+        "privacy": "Privacy",
+        "terms": "Terms",
+        "contact": "Contact",
+        "copyright": "© {{year}} Tributto. All rights reserved."
+    },
+    "auth": {
+        "login": "Login",
+        "register": "Register",
+        "username": "Username",
+        "password": "Password",
+        "email": "Enter your email address",
+        "company_name": "Company Name",
+        "choose_role": "Choose role",
+        "role_private": "Private",
+        "role_company": "Company",
+        "visible": "Visible",
+        "upload_logo": "Upload your logo",
+        "max_file_size": "Maximum file size: 64 MB.",
+        "description_placeholder": "Brief description of your company (you can also edit this later)",
+        "terms_agree": "I agree to your",
+        "terms_link": "terms and conditions",
+        "privacy_text": "We use your personal information to provide you with the best possible experience on our website, to manage your account access, and for other purposes explained in our",
+        "privacy_link": "privacy policy",
+        "forgot_password": "Forgot password?",
+        "remember_me": "Remember me",
+        "try_now": "Try it now – no credit card required",
+        "enter_username": "Enter your username",
+        "enter_password": "Enter your password",
+        "choose_username_company": "Choose you username or company name",
+        "enter_company_name": "Enter your company name"
+    },
+    "memorials_list": {
+        "title": "Memorial Pages",
+        "subtitle": "Honoring lives, preserving memories",
+        "loading": "Loading memorials..."
+    },
+    "memorial_page": {
+        "loading": "Loading memories...",
+        "born": "Born",
+        "passed": "Passed",
+        "life_story_title": "A Life Beautifully Lived",
+        "memories_title": "Precious Memories",
+        "memories_subtitle": "Moments frozen in time",
+        "no_photos": "No photos uploaded yet.",
+        "photo_quote": "Every photo tells a story of love",
+        "videos_title": "Moving Memories",
+        "videos_subtitle": "Their laughter, their voice, preserved forever",
+        "no_videos": "No videos uploaded yet.",
+        "tributes_title": "Words from the Heart",
+        "tributes_subtitle": "Love letters from those whose lives they touched with grace.",
+        "leave_message_title": "Share your memories and condolences",
+        "leave_message_button": "Leave a Message",
+        "share_title": "Share this Memorial",
+        "share_subtitle": "Preserve their memory by sharing with family and friends.",
+        "scan_qr": "Scan to visit memorial",
+        "memorial_link": "Memorial Link",
+        "copy_button": "Copy",
+        "public_memorial": "This Memorial is Public",
+        "public_desc": "Anyone with the link can view",
+        "share_footer": "Share this page to honor their beautiful life.",
+        "in_loving_memory": "In Loving Memory",
+        "created_with_love": "Created with love by",
+        "honoring_lives": "Honoring lives, preserving memories",
+        "condolence_book": "Condolence Book",
+        "your_name": "Your name",
+        "your_message": "Your message",
+        "add_button": "Add",
+        "created_by": "Created with love",
+        "tagline": "Honor life, preserve memories",
+        "bio_fallback": "Eleanor Rose Mitchell was a shining example of warmth, wisdom, and unwavering love. Born in a small coastal town in Maine, she grew up surrounded by the rhythm of the sea and the comfort of her family.",
+        "memory_item": "Memory {{count}}",
+        "video_item": "Video {{count}}",
+        "demo_photo_0": "Family Memories",
+        "demo_photo_1": "Vintage Family Reunion",
+        "demo_photo_2": "With Grandchildren",
+        "demo_photo_3": "Garden she loved",
+        "demo_photo_4": "Peaceful Moment",
+        "demo_photo_5": "Portrait",
+        "demo_video_0": "Family Reunion 2024",
+        "demo_video_1": "80th Birthday Celebration",
+        "demo_video_2": "Garden Tour",
+        "demo_comment_0_text": "Mom, you were my guiding star, my safe haven, and my greatest teacher. Your love made me who I am today. I miss you every single day.",
+        "demo_comment_1_text": "Mrs. Mitchell was the teacher who changed my life. She believed in me when I didn't believe in myself.",
+        "demo_comment_2_text": "Eleanor, my dear friend for 40 years. We laughed so much, cried so much.",
+        "demo_comment_3_text": "Grandma, every visit with you was an unforgettable experience.",
+        "bio_p1": "From an early age, {{firstName}} showed a natural talent for bringing people together, whether through her infectious laughter or her extraordinary baking skills that made every gathering a feast.",
+        "bio_p2": "After graduating with honors in English studies, she dedicated her life to teaching. She was convinced that every child has a story to tell and committed herself fully to that belief.",
+        "bio_p3": "{{firstName}}'s greatest joy was her family. For 52 wonderful years, she was a devoted wife, a caring mother, and a loving grandmother. Her home was always open.",
+        "bio_quote": "Such a gentle soul, such a pure heart",
+        "closing_quote": "Those we love don't go away, they walk beside us every day.",
+        "closing_tribute": "{{firstName}}'s light will shine on through the love she gave, the wisdom she shared, and the countless lives she touched. May her memory be a blessing to all who knew her."
+    }
+}

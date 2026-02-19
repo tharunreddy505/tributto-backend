@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&family=Manrope:wght@200..800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply font-sans text-dark bg-light antialiased;
+  }
+
+  p {
+    font-family: 'Manrope', sans-serif;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center px-6 py-3 rounded-full font-medium transition-all duration-300;
+  }
+
+  .btn-primary {
+    @apply bg-white text-dark hover:bg-primary hover:text-white shadow-md;
+  }
+
+  .btn-outline {
+    @apply border border-white text-white hover:bg-white hover:text-dark;
+  }
+
+  .section-padding {
+    @apply py-20 px-4 md:px-8 lg:px-16 mx-auto max-w-7xl;
+  }
+
+  /* GrapesJS Layout Support */
+  .row {
+    display: flex;
+    justify-content: flex-start;
+    align-items: stretch;
+    flex-wrap: nowrap;
+    padding: 10px;
+  }
+
+  .cell {
+    min-height: 75px;
+    flex-grow: 1;
+    flex-basis: 0;
+  }
+
+  @media (max-width: 768px) {
+    .row {
+      flex-wrap: wrap;
+    }
+
+    .cell {
+      flex-basis: 100%;
+    }
+  }
+
+  .container-boxed {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+
+  .rich-text-preview p,
+  .rich-text-preview div,
+  .rich-text-preview span {
+    display: inline !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+
+  /* Override Tailwind italic utility */
+  .italic {
+    font-style: normal !important;
+  }
+
+  /* Custom Scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 4px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+}
+/* Mouse Scroll Animation */
+@keyframes scrollDown {
+  0% { transform: translateY(0); opacity: 0; }
+  30% { opacity: 1; }
+  60% { opacity: 1; }
+  100% { transform: translateY(16px); opacity: 0; }
+}
+
+.animate-scroll {
+  animation: scrollDown 2s cubic-bezier(0.76, 0, 0.3, 1) infinite;
+}
