@@ -5,7 +5,7 @@ import { faPlus, faTrash, faEdit, faShoppingBag, faSearch } from '@fortawesome/f
 import { Link } from 'react-router-dom';
 
 const ProductsAdmin = () => {
-    const { products, deleteProduct, showToast } = useTributeContext();
+    const { products, deleteProduct, showToast, showAlert } = useTributeContext();
     const [searchTerm, setSearchTerm] = useState('');
 
     const filteredProducts = products.filter(p =>
@@ -14,10 +14,10 @@ const ProductsAdmin = () => {
     );
 
     const handleDelete = async (id) => {
-        if (window.confirm("Are you sure you want to delete this product?")) {
+        showAlert("Are you sure you want to delete this product? This will permanently remove it from the shop.", "error", "Confirm Delete", async () => {
             const success = await deleteProduct(id);
             if (success) showToast("Product deleted successfully!", "success");
-        }
+        });
     };
 
     return (

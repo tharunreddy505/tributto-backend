@@ -1,28 +1,48 @@
 import pg from 'pg';
-import dotenv from 'dotenv';
-dotenv.config();
-
 const { Pool } = pg;
 const pool = new Pool({
-    user: process.env.DB_USER || 'postgres',
-    password: process.env.DB_PASSWORD || 'password',
-    host: process.env.DB_HOST || 'localhost',
-    port: process.env.DB_PORT || 5432,
-    database: process.env.DB_NAME || 'tributto'
+    user: 'postgres',
+    host: 'localhost',
+    database: 'tributto',
+    password: '5432',
+    port: 5432
 });
 
-const checkSchema = async () => {
+async function checkSchema() {
     try {
-        const res = await pool.query("SELECT column_name, data_type FROM information_schema.columns WHERE table_name = 'menu_items'");
-        console.log("COLUMNS:", JSON.stringify(res.rows, null, 2));
+        const users = await pool.query("SELECT column_name FROM information_schema.columns WHERE table_name = 'users'");
+        console.log('--- USERS ---');
+        users.rows.forEach(r => console.log(r.column_name));
 
-        const res2 = await pool.query("SELECT * FROM menus");
-        console.log("MENUS:", JSON.stringify(res2.rows, null, 2));
-    } catch (e) {
-        console.error("ERROR:", e.message);
+        const email_templates = await pool.query("SELECT column_name FROM information_schema.columns WHERE table_name = 'email_templates'");
+        console.log('--- EMAIL TEMPLATES ---');
+        email_templates.rows.forEach(r => console.log(r.column_name));
+
+        const subs = await pool.query("SELECT column_name FROM information_schema.columns WHERE table_name = 'subscriptions'");
+        console.log('--- SUBSCRIPTIONS ---');
+        subs.rows.forEach(r => console.log(r.column_name));
+
+        const tributes = await pool.query("SELECT column_name FROM information_schema.columns WHERE table_name = 'tributes'");
+        console.log('--- TRIBUTES ---');
+        tributes.rows.forEach(r => console.log(r.column_name));
+
+        const constraints = await pool.query("SELECT conname FROM pg_constraint WHERE conrelid = 'email_templates'::regclass");
+        console.log('--- EMAIL TEMPLATES CONSTRAINTS ---');
+        constraints.rows.forEach(r => console.log(r.conname));
+
+        const subscriptions = await pool.query("SELECT column_name FROM information_schema.columns WHERE table_name = 'subscriptions'");
+        console.log('--- SUBSCRIPTIONS ---');
+        subscriptions.rows.forEach(r => console.log(r.column_name));
+
+        const subConstraints = await pool.query("SELECT conname FROM pg_constraint WHERE conrelid = 'subscriptions'::regclass");
+        console.log('--- SUBSCRIPTIONS CONSTRAINTS ---');
+        subConstraints.rows.forEach(r => console.log(r.conname));
+
+    } catch (err) {
+        console.error(err);
     } finally {
         await pool.end();
     }
-};
+}
 
 checkSchema();

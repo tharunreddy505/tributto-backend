@@ -3,8 +3,10 @@ import { useTributeContext } from '../../context/TributeContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload, faTrash, faImage, faFilm, faSearch, faPlus, faTimes, faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 
+import { compressImage, fileToBase64 } from '../../utils/imageOptimizer';
+
 const MediaAdmin = () => {
-    const { media, uploadGlobalMedia, removeMedia } = useTributeContext();
+    const { media, uploadGlobalMedia, updateMediaDetails, removeMedia, showAlert, showToast } = useTributeContext();
     const [searchTerm, setSearchTerm] = useState('');
     const [filterType, setFilterType] = useState('all');
     const [isUploading, setIsUploading] = useState(false);
@@ -43,25 +45,38 @@ const MediaAdmin = () => {
 
     const handleFiles = async (files) => {
         setIsUploading(true);
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            const reader = new FileReader();
+        const filesArray = Array.from(files);
+
+        for (let i = 0; i < filesArray.length; i++) {
+            const file = filesArray[i];
             const type = file.type.startsWith('video') ? 'video' : 'image';
 
-            reader.onload = async (event) => {
-                await uploadGlobalMedia(type, event.target.result, user.id);
-                if (i === files.length - 1) setIsUploading(false);
-            };
-            reader.readAsDataURL(file);
+            try {
+                let dataUrl;
+                if (type === 'image') {
+                    // Optimize images: 1600px max, 0.8 quality
+                    dataUrl = await compressImage(file, { maxWidth: 1600, quality: 0.8 });
+                } else {
+                    // Just convert videos to base64
+                    dataUrl = await fileToBase64(file);
+                }
+
+                await uploadGlobalMedia(type, dataUrl, user.id);
+            } catch (err) {
+                console.error("Error processing file:", err);
+            }
+
+            if (i === filesArray.length - 1) setIsUploading(false);
         }
     };
 
     const handleDelete = async (e, id) => {
         e.stopPropagation();
-        if (window.confirm("Are you sure you want to delete this media item?")) {
+        showAlert("Are you sure you want to delete this media item?", "error", "Confirm Delete", async () => {
             await removeMedia(id);
             if (selectedMedia?.id === id) setSelectedMedia(null);
-        }
+            showToast("Media deleted successfully!");
+        });
     };
 
     return (
@@ -227,30 +242,81 @@ const MediaAdmin = () => {
                                             <p className="text-sm font-medium text-gray-700 truncate">{new Date(selectedMedia.created_at || Date.now()).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
                                         </div>
                                     </div>
-                                    <div className="space-y-3">
-                                        <div>
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">File Type</p>
-                                            <p className="text-xs font-medium text-gray-700 uppercase">{selectedMedia.type}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">File URL</p>
-                                            <div className="flex gap-2">
-                                                <input
-                                                    type="text"
-                                                    readOnly
-                                                    value={selectedMedia.url.substring(0, 50) + "..."}
-                                                    className="flex-grow text-[10px] font-mono bg-white border border-gray-200 rounded px-2 py-1 outline-none"
-                                                />
+                                    <div className="space-y-4 mt-6">
+                                        <div className="grid grid-cols-2 gap-4 pb-4 border-b border-gray-100">
+                                            <div>
+                                                <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">File Type</p>
+                                                <p className="text-xs font-medium text-gray-700 uppercase">{selectedMedia.type}</p>
+                                            </div>
+                                            <div>
+                                                <p className="text-[10px] font-bold text-gray-400 uppercase mb-1">File URL</p>
                                                 <button
                                                     onClick={() => {
                                                         navigator.clipboard.writeText(selectedMedia.url);
-                                                        alert("Link copied!");
+                                                        showToast("Link copied!");
                                                     }}
-                                                    className="text-[10px] font-bold text-primary hover:underline whitespace-nowrap"
+                                                    className="text-[10px] font-bold text-primary hover:underline"
                                                 >
-                                                    Copy Link
+                                                    Copy URL
                                                 </button>
                                             </div>
+                                        </div>
+
+                                        <div>
+                                            <label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">Alternative Text</label>
+                                            <textarea
+                                                value={selectedMedia.alt_text || ''}
+                                                onChange={(e) => {
+                                                    const newMedia = { ...selectedMedia, alt_text: e.target.value };
+                                                    setSelectedMedia(newMedia);
+                                                }}
+                                                onBlur={() => updateMediaDetails(selectedMedia.id, { alt_text: selectedMedia.alt_text })}
+                                                rows="2"
+                                                className="w-full text-sm bg-white border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-primary transition-all resize-none"
+                                                placeholder="Describe the purpose of the image..."
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">Title</label>
+                                            <input
+                                                type="text"
+                                                value={selectedMedia.title || ''}
+                                                onChange={(e) => {
+                                                    const newMedia = { ...selectedMedia, title: e.target.value };
+                                                    setSelectedMedia(newMedia);
+                                                }}
+                                                onBlur={() => updateMediaDetails(selectedMedia.id, { title: selectedMedia.title })}
+                                                className="w-full text-sm bg-white border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-primary transition-all"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">Caption</label>
+                                            <textarea
+                                                value={selectedMedia.caption || ''}
+                                                onChange={(e) => {
+                                                    const newMedia = { ...selectedMedia, caption: e.target.value };
+                                                    setSelectedMedia(newMedia);
+                                                }}
+                                                onBlur={() => updateMediaDetails(selectedMedia.id, { caption: selectedMedia.caption })}
+                                                rows="2"
+                                                className="w-full text-sm bg-white border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-primary transition-all resize-none"
+                                            />
+                                        </div>
+
+                                        <div>
+                                            <label className="text-[10px] font-bold text-gray-400 uppercase mb-1 block">Description</label>
+                                            <textarea
+                                                value={selectedMedia.description || ''}
+                                                onChange={(e) => {
+                                                    const newMedia = { ...selectedMedia, description: e.target.value };
+                                                    setSelectedMedia(newMedia);
+                                                }}
+                                                onBlur={() => updateMediaDetails(selectedMedia.id, { description: selectedMedia.description })}
+                                                rows="3"
+                                                className="w-full text-sm bg-white border border-gray-200 rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-primary transition-all resize-none"
+                                            />
                                         </div>
                                     </div>
                                 </div>

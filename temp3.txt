@@ -1,0 +1,62 @@
+[
+  {
+    "column_name": "id",
+    "data_type": "integer"
+  },
+  {
+    "column_name": "user_id",
+    "data_type": "integer"
+  },
+  {
+    "column_name": "product_id",
+    "data_type": "integer"
+  },
+  {
+    "column_name": "status",
+    "data_type": "character varying"
+  },
+  {
+    "column_name": "trial_start",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "column_name": "trial_end",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "column_name": "paid_start",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "column_name": "paid_end",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "column_name": "is_lifetime",
+    "data_type": "boolean"
+  },
+  {
+    "column_name": "stripe_payment_intent_id",
+    "data_type": "text"
+  },
+  {
+    "column_name": "created_at",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "column_name": "updated_at",
+    "data_type": "timestamp without time zone"
+  },
+  {
+    "column_name": "memorial_name",
+    "data_type": "text"
+  },
+  {
+    "column_name": "memorial_id",
+    "data_type": "integer"
+  },
+  {
+    "column_name": "language",
+    "data_type": "character varying"
+  }
+]

@@ -11,3 +11,11 @@ export const getApiUrl = (endpoint) => {
     const path = endpoint.replace(/^\//, '');   // remove leading slash if present
     return `${baseUrl}/${path}`;
 };
+
+// Helper for media URLs (Local vs S3)
+export const getMediaUrl = (url) => {
+    if (!url) return '';
+    if (url.startsWith('http') || url.startsWith('data:')) return url;
+    const baseUrl = API_URL.replace(/\/$/, '');
+    return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+};

@@ -6,6 +6,7 @@ import {
     faTimes, faLock, faUnlock, faEye, faEyeSlash, faCopy
 } from '@fortawesome/free-solid-svg-icons';
 
+import { useTributeContext } from '../../context/TributeContext';
 import { API_URL } from '../../config';
 
 const API = API_URL;
@@ -48,12 +49,19 @@ const makeEl = (type, code) => ({
 const CANVAS_W = 420;
 const CANVAS_H = Math.round(CANVAS_W * (841.89 / 595.28)); // 594px
 
+import { compressImage } from '../../utils/imageOptimizer';
+
 export default function VoucherTemplateAdmin() {
+    const { showAlert, showToast } = useTributeContext();
     const [templates, setTemplates] = useState([]);
     const [tpl, setTpl] = useState(null);       // current template being edited
     const [activeId, setActiveId] = useState(null);
     const [saving, setSaving] = useState(false);
     const [savedOk, setSavedOk] = useState(false);
+    const [previews, setPreviews] = useState({
+        background_image: null,
+        logo_url: null
+    });
     const canvasRef = useRef(null);
     const drag = useRef(null);
     const bgRef = useRef();
@@ -92,32 +100,56 @@ export default function VoucherTemplateAdmin() {
     const newTpl = () => {
         setTpl({ id: null, name: 'New Template', background_color: '#1a1a1a', background_image: null, logo_url: null, elements: [], is_default: false });
         setActiveId(null);
+        setPreviews({ background_image: null, logo_url: null });
     };
 
     const save = async () => {
         setSaving(true);
-        const method = tpl.id ? 'PUT' : 'POST';
-        const url = tpl.id ? `${API}/api/voucher-templates/${tpl.id}` : `${API}/api/voucher-templates`;
+        setSavedOk(false);
+
         try {
+            let bgPayload = tpl.background_image;
+            if (tpl.background_image instanceof File) {
+                bgPayload = await compressImage(tpl.background_image, { maxWidth: 1600, quality: 0.8 });
+            }
+
+            let logoPayload = tpl.logo_url;
+            if (tpl.logo_url instanceof File) {
+                logoPayload = await compressImage(tpl.logo_url, { maxWidth: 800, quality: 0.8 });
+            }
+
+            const payload = {
+                ...tpl,
+                background_image: bgPayload,
+                logo_url: logoPayload,
+                elements: JSON.stringify(tpl.elements)
+            };
+
+            const method = tpl.id ? 'PUT' : 'POST';
+            const url = tpl.id ? `${API}/api/voucher-templates/${tpl.id}` : `${API}/api/voucher-templates`;
             const res = await fetch(url, {
                 method,
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-                body: JSON.stringify(tpl),
+                body: JSON.stringify(payload),
             });
             const data = await res.json();
             setTpl({ ...data, elements: parseEls(data.elements) });
             setSavedOk(true);
+            showToast("Template saved successfully");
             setTimeout(() => setSavedOk(false), 2500);
             load();
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error(e); showAlert("Failed to save template", "error"); }
         setSaving(false);
     };
 
     const deleteTpl = async () => {
-        if (!tpl?.id || !confirm('Delete this template?')) return;
-        await fetch(`${API}/api/voucher-templates/${tpl.id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
-        setTpl(null);
-        load();
+        if (!tpl?.id) return;
+        showAlert("Delete this template? This action cannot be undone.", "error", "Confirm Delete", async () => {
+            await fetch(`${API}/api/voucher-templates/${tpl.id}`, { method: 'DELETE', headers: { Authorization: `Bearer ${token}` } });
+            setTpl(null);
+            load();
+            showToast("Template deleted successfully");
+        });
     };
 
     // ── Elements ──────────────────────────────────────────────────────────────
@@ -192,9 +224,9 @@ export default function VoucherTemplateAdmin() {
     const handleFile = (key) => (e) => {
         const file = e.target.files[0];
         if (!file) return;
-        const reader = new FileReader();
-        reader.onload = ev => setTpl(p => ({ ...p, [key]: ev.target.result }));
-        reader.readAsDataURL(file);
+        setTpl(p => ({ ...p, [key]: file }));
+        if (previews[key] && previews[key].startsWith('blob:')) URL.revokeObjectURL(previews[key]);
+        setPreviews(p => ({ ...p, [key]: URL.createObjectURL(file) }));
     };
 
     const activeEl = tpl?.elements?.find(e => e.id === activeId);
@@ -268,7 +300,7 @@ export default function VoucherTemplateAdmin() {
                                 <FontAwesomeIcon icon={faImage} /> {tpl.background_image ? 'Change BG Image' : 'Upload BG Image'}
                             </button>
                             {tpl.background_image && (
-                                <button onClick={() => setTpl(p => ({ ...p, background_image: null }))} style={paletteBtn('#1a0a0a', '#f87171')}>
+                                <button onClick={() => { setTpl(p => ({ ...p, background_image: null })); setPreviews(p => ({ ...p, background_image: null })); }} style={paletteBtn('#1a0a0a', '#f87171')}>
                                     <FontAwesomeIcon icon={faTimes} /> Remove BG Image
                                 </button>
                             )}
@@ -278,7 +310,7 @@ export default function VoucherTemplateAdmin() {
                                 <FontAwesomeIcon icon={faImage} /> {tpl.logo_url ? 'Change Logo' : 'Upload Logo'}
                             </button>
                             {tpl.logo_url && (
-                                <button onClick={() => setTpl(p => ({ ...p, logo_url: null }))} style={paletteBtn('#1a0a0a', '#f87171')}>
+                                <button onClick={() => { setTpl(p => ({ ...p, logo_url: null })); setPreviews(p => ({ ...p, logo_url: null })); }} style={paletteBtn('#1a0a0a', '#f87171')}>
                                     <FontAwesomeIcon icon={faTimes} /> Remove Logo
                                 </button>
                             )}
@@ -314,9 +346,6 @@ export default function VoucherTemplateAdmin() {
                                 width: CANVAS_W,
                                 height: CANVAS_H,
                                 backgroundColor: tpl.background_color || '#1a1a1a',
-                                backgroundImage: tpl.background_image ? `url(${tpl.background_image})` : 'none',
-                                backgroundSize: 'cover',
-                                backgroundPosition: 'center',
                                 position: 'relative',
                                 borderRadius: 4,
                                 overflow: 'hidden',
@@ -326,10 +355,32 @@ export default function VoucherTemplateAdmin() {
                                 flexShrink: 0,
                             }}
                         >
+                            {/* Background image */}
+                            {(tpl.background_image || previews.background_image) && (
+                                <img
+                                    src={previews.background_image || tpl.background_image}
+                                    alt="Background"
+                                    style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none', zIndex: 0 }}
+                                />
+                            )}
+
                             {/* Logo */}
-                            {tpl.logo_url && (
-                                <img src={tpl.logo_url} alt="Logo"
-                                    style={{ position: 'absolute', top: 12, left: '50%', transform: 'translateX(-50%)', height: 40, objectFit: 'contain', pointerEvents: 'none', zIndex: 0 }} />
+                            {(tpl.logo_url || previews.logo_url) && (
+                                <img
+                                    src={previews.logo_url || tpl.logo_url}
+                                    alt="Logo"
+                                    style={{
+                                        position: 'absolute',
+                                        top: 30 * (CANVAS_W / 595.28), // Scale top position
+                                        left: '50%',
+                                        transform: 'translateX(-50%)',
+                                        maxHeight: 60 * (CANVAS_W / 595.28), // Scale max height
+                                        maxWidth: '60%',
+                                        objectFit: 'contain',
+                                        pointerEvents: 'none',
+                                        zIndex: 2,
+                                    }}
+                                />
                             )}
 
                             {/* Elements */}

@@ -1,0 +1,17 @@
+[
+  {
+    "slug": "welcome_trial",
+    "language": "en",
+    "name": "Trial Welcome Email"
+  },
+  {
+    "slug": "welcome_trial",
+    "language": "de",
+    "name": "Willkommen (DE)"
+  },
+  {
+    "slug": "welcome_trial",
+    "language": "it",
+    "name": "Benvenuto (IT)"
+  }
+]

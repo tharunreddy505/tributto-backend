@@ -4,7 +4,7 @@ import { faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import howItWorksImage from '../../assets/images/HowItWorks.png';
 
-const MemorialCreation = () => {
+const MemorialCreation = ({ onOpenModal }) => {
     const { t } = useTranslation();
     return (
         <section className="py-24 bg-white">
@@ -19,7 +19,10 @@ const MemorialCreation = () => {
                     </p>
                 </div>
 
-                <div className="max-w-4xl mx-auto rounded-3xl overflow-hidden shadow-2xl relative group cursor-pointer">
+                <div
+                    onClick={onOpenModal}
+                    className="max-w-4xl mx-auto rounded-3xl overflow-hidden shadow-2xl relative group cursor-pointer"
+                >
                     <img
                         src={howItWorksImage}
                         alt="How it works"

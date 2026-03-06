@@ -239,5 +239,76 @@
         "bio_quote": "Such a gentle soul, such a pure heart",
         "closing_quote": "Those we love don't go away, they walk beside us every day.",
         "closing_tribute": "{{firstName}}'s light will shine on through the love she gave, the wisdom she shared, and the countless lives she touched. May her memory be a blessing to all who knew her."
+    },
+    "create_memorial": {
+        "profile_photo": "Profile Photo",
+        "cover_photo": "Cover Photo",
+        "click_icons": "Click icons to upload photos",
+        "full_name": "Full Name",
+        "name_known_by": "The name they were known by",
+        "dob": "Date of Birth",
+        "passed_away": "Passed Away",
+        "pub_status": "Publication status",
+        "public": "Public",
+        "private": "Private",
+        "public_desc": "Everyone can see this memorial.",
+        "private_desc": "Only people with the direct link can see this.",
+        "note": "Note:",
+        "login_note": "After filling in the details, you'll be asked to register/login before completing your memorial.",
+        "life_story": "Life Story",
+        "story_desc": "Write from the heart — there is no right or wrong.",
+        "story_placeholder": "Take your time to tell what made them so special... their childhood, their passions, how they touched other people's lives...",
+        "photos_videos": "Photos & Videos (Optional)",
+        "add_photos": "Add Photos",
+        "add_videos": "Add Videos",
+        "video_urls": "Video URLs (YouTube, Vimeo, etc.)",
+        "add_url": "Add Another Video URL",
+        "almost_there": "Almost there!",
+        "ready": "Your memorial page details are ready. Click \"Launch Memorial Page\" to publish it and share it with friends and family.",
+        "back": "Back",
+        "cancel": "Cancel",
+        "continue": "Continue",
+        "launch": "Launch Memorial Page",
+        "creating": "Creating..."
+    },
+    "pricing": {
+        "title_line1": "Simple and transparent",
+        "title_line2": "pricing",
+        "description": "Choose the right plan to honor your loved one's memory.",
+        "free": {
+            "title": "Free Package",
+            "price": "0",
+            "period": "Free forever",
+            "features": [
+                "Online memorial page",
+                "Limited photos (5 images)",
+                "1 administrator"
+            ],
+            "button": "Start for Free"
+        },
+        "premium": {
+            "title": "Premium Package",
+            "price": "99",
+            "period": "One-time payment",
+            "features": [
+                "Physical QR plaque",
+                "Unlimited media",
+                "Multiple administrators",
+                "Lifetime availability"
+            ],
+            "button": "Go Premium",
+            "popular": "Most Popular"
+        },
+        "corporate": {
+            "title": "Corporate Package",
+            "price": "Custom",
+            "period": "TBD pricing",
+            "features": [
+                "Corporate dashboard",
+                "Multiple memorial pages",
+                "Multiple company admins"
+            ],
+            "button": "Contact Sales"
+        }
     }
 }

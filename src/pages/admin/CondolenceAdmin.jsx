@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faSearch, faCommentDots, faPlus, faEdit } from '@fortawesome/free-solid-svg-icons';
 
 const CondolenceAdmin = () => {
-    const { fetchComments, removeComment, updateComment, tributes, addComment } = useTributeContext();
+    const { fetchComments, removeComment, updateComment, tributes, addComment, showAlert, showToast } = useTributeContext();
     const [comments, setComments] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -27,12 +27,13 @@ const CondolenceAdmin = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        if (window.confirm('Are you sure you want to delete this condolence?')) {
+        showAlert("Are you sure you want to delete this condolence message? This action is permanent.", "error", "Confirm Delete", async () => {
             const success = await removeComment(id);
             if (success) {
                 setComments(prev => prev.filter(c => c.id !== id));
+                showToast("Condolence deleted successfully");
             }
-        }
+        });
     };
 
     const handleEdit = (comment) => {

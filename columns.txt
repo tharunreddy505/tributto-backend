@@ -1,0 +1,1 @@
+id, name, dates, birth_date, passing_date, bio, photo_url, slug, views, created_at, user_id, video_urls, cover_url, status

@@ -4,14 +4,16 @@ import { useTributeContext } from '../context/TributeContext';
 import Navbar from '../components/layout/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash, faMinus, faPlus, faArrowLeft, faShoppingBag, faShieldAlt, faTruck, faUndo, faArrowRight, faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import CouponSection from '../components/cart/CouponSection';
 
 const CartPage = () => {
-    const { cart, removeFromCart, updateCartQuantity, showToast } = useTributeContext();
+    const { cart, removeFromCart, updateCartQuantity, showToast, appliedCoupon } = useTributeContext();
     const navigate = useNavigate();
 
     const subtotal = cart.reduce((sum, item) => sum + (parseFloat(item.price) * item.quantity), 0);
     const shipping = 0;
-    const total = subtotal + shipping;
+    const discount = appliedCoupon ? appliedCoupon.discount : 0;
+    const total = Math.max(0, subtotal + shipping - discount);
 
     if (cart.length === 0) {
         return (
@@ -55,6 +57,8 @@ const CartPage = () => {
                     </div>
                 </div>
 
+                <CouponSection />
+
                 <div className="grid grid-cols-1 xl:grid-cols-12 gap-16">
 
                     {/* Cart Items List */}
@@ -76,6 +80,22 @@ const CartPage = () => {
                                             <div>
                                                 <h3 className="text-2xl font-serif text-dark mb-1 group-hover:text-primary transition-colors duration-300">{item.name}</h3>
                                                 <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">{item.category || 'Legacy Collection'}</p>
+                                                {/* Memorial subscription metadata — matches WordPress listing */}
+                                                {item.metadata?.type === 'memorial_subscription' && (
+                                                    <div className="mt-3 space-y-1">
+                                                        <p className="text-sm text-[#c59d5f] font-medium">
+                                                            Memorial Page: <span className="font-bold">{item.metadata.memorial_name}</span>
+                                                            {item.metadata.memorial_id && (
+                                                                <span className="text-gray-400 font-normal"> (#{item.metadata.memorial_id})</span>
+                                                            )}
+                                                        </p>
+                                                        {item.metadata.listing && item.metadata.listing.trim() !== '' && (
+                                                            <p className="text-sm text-gray-500">
+                                                                Listing: <span className="font-bold text-dark">{item.metadata.listing}</span>
+                                                            </p>
+                                                        )}
+                                                    </div>
+                                                )}
                                             </div>
                                             <button
                                                 onClick={() => removeFromCart(item.id, item.metadata)}
@@ -175,6 +195,12 @@ const CartPage = () => {
                                     <span className="text-white/40 font-serif italic">Taxes</span>
                                     <span className="text-white/60 font-bold uppercase text-[10px] tracking-widest">Always Included</span>
                                 </div>
+                                {appliedCoupon && (
+                                    <div className="flex justify-between text-sm animate-in slide-in-from-top-1 duration-200">
+                                        <span className="text-primary font-serif italic">Coupon Discount ({appliedCoupon.code})</span>
+                                        <span className="text-primary font-bold tracking-tight">- € {appliedCoupon.discount.toFixed(2)}</span>
+                                    </div>
+                                )}
                             </div>
 
                             <div className="flex justify-between items-end mb-12 relative">

@@ -239,5 +239,76 @@
         "bio_quote": "Eine so sanfte Seele, ein so reines Herz",
         "closing_quote": "Diejenigen, die wir lieben, gehen nicht fort, sie begleiten uns jeden Tag.",
         "closing_tribute": "{{firstName}}'s Licht wird durch die Liebe, die sie schenkte, die Weisheit, die sie weitergab, und die unzähligen Leben, die sie berührte, weiterleuchten. Ihr Andenken sei allen, die sie kannten, ein Segen."
+    },
+    "create_memorial": {
+        "profile_photo": "Profilfoto",
+        "cover_photo": "Titelbild",
+        "click_icons": "Klicken Sie auf Symbole, um Fotos hochzuladen",
+        "full_name": "Vollständiger Name",
+        "name_known_by": "Der Name, unter dem sie bekannt waren",
+        "dob": "Geburtsdatum",
+        "passed_away": "Verstorben",
+        "pub_status": "Veröffentlichungsstatus",
+        "public": "Öffentlich",
+        "private": "Privat",
+        "public_desc": "Jeder kann diese Gedenkstätte sehen.",
+        "private_desc": "Nur Personen mit dem direkten Link können dies sehen.",
+        "note": "Hinweis:",
+        "login_note": "Nach Eingabe der Daten werden Sie aufgefordert, sich zu registrieren/anzumelden, bevor Sie Ihre Gedenkstätte abschließen.",
+        "life_story": "Lebensgeschichte",
+        "story_desc": "Schreiben Sie aus dem Herzen - es gibt kein Richtig oder Falsch.",
+        "story_placeholder": "Nehmen Sie sich Zeit, um zu erzählen, was sie so besonders gemacht hat... ihre Kindheit, ihre Leidenschaften, wie sie das Leben anderer berührt haben...",
+        "photos_videos": "Fotos & Videos (optional)",
+        "add_photos": "Fotos hinzufügen",
+        "add_videos": "Videos hinzufügen",
+        "video_urls": "Video-URLs (YouTube, Vimeo usw.)",
+        "add_url": "Weitere Video-URL hinzufügen",
+        "almost_there": "Fast geschafft!",
+        "ready": "Ihre Gedenkseiten-Details sind fertig. Klicken Sie auf \"Gedenkseite starten\", um Ihre kostenlose 7-Tage-Testversion zu starten und zu veröffentlichen.",
+        "back": "Zurück",
+        "cancel": "Abbrechen",
+        "continue": "Weiter",
+        "launch": "Gedenkseite starten",
+        "creating": "Wird erstellt..."
+    },
+    "pricing": {
+        "title_line1": "Einfache und transparente",
+        "title_line2": "Preisgestaltung",
+        "description": "Wählen Sie den richtigen Plan, um das Andenken an Ihren geliebten Menschen zu ehren.",
+        "free": {
+            "title": "Kostenloses Paket",
+            "price": "0",
+            "period": "Für immer kostenlos",
+            "features": [
+                "Online-Gedenkseite",
+                "Begrenzte Fotos (5 Bilder)",
+                "1 Administrator"
+            ],
+            "button": "Kostenlos starten"
+        },
+        "premium": {
+            "title": "Premium-Paket",
+            "price": "99",
+            "period": "Einmalige Zahlung",
+            "features": [
+                "Physische QR-Plakette",
+                "Unbegrenzte Medien",
+                "Mehrere Administratoren",
+                "Lebenslange Verfügbarkeit"
+            ],
+            "button": "Premium gehen",
+            "popular": "Am beliebtesten"
+        },
+        "corporate": {
+            "title": "Corporate-Paket",
+            "price": "Individuell",
+            "period": "Preise auf Anfrage",
+            "features": [
+                "Corporate-Dashboard",
+                "Mehrere Gedenkseiten",
+                "Mehrere Firmenadmins"
+            ],
+            "button": "Vertrieb kontaktieren"
+        }
     }
 }

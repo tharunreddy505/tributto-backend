@@ -33,6 +33,7 @@ const SortableMenuItem = ({
         isDragging
     } = useSortable({ id: item.id });
 
+    const { showAlert } = useTributeContext();
     const [isTranslating, setIsTranslating] = useState(false);
 
     const style = {
@@ -62,7 +63,7 @@ const SortableMenuItem = ({
             }
         } catch (error) {
             console.error("Auto-translate failed:", error);
-            alert("Translation failed. Please try manual input.");
+            showAlert("Translation failed. Please try manual input.", "error");
         } finally {
             setIsTranslating(false);
         }
@@ -212,7 +213,8 @@ const SortableMenuItem = ({
 const MenusAdmin = () => {
     const {
         pages, posts, tributes,
-        fetchMenus, fetchMenu, addMenu, updateMenu, deleteMenu, fetchMenuByLocation
+        fetchMenus, fetchMenu, addMenu, updateMenu, deleteMenu, fetchMenuByLocation,
+        showAlert, showToast
     } = useTributeContext();
 
     const [menus, setMenus] = useState([]);
@@ -307,11 +309,14 @@ const MenusAdmin = () => {
     };
 
     const handleDeleteMenu = async () => {
-        if (!currentMenu || !window.confirm("Are you sure you want to delete this menu?")) return;
-        await deleteMenu(currentMenu.id);
-        setSelectedMenuId('');
-        setCurrentMenu(null);
-        loadMenus();
+        if (!currentMenu) return;
+        showAlert("Are you sure you want to delete this menu?", "error", "Confirm Delete", async () => {
+            await deleteMenu(currentMenu.id);
+            setSelectedMenuId('');
+            setCurrentMenu(null);
+            loadMenus();
+            showToast("Menu deleted successfully");
+        });
     };
 
     const addToMenu = (type) => {
@@ -327,7 +332,7 @@ const MenusAdmin = () => {
         } else if (type === 'posts') {
             itemsToAdd = posts.filter(p => selectedPosts.includes(p.id)).map(p => ({
                 title: p.title,
-                url: `/post/${p.slug}`,
+                url: `/blog/${p.slug}`,
                 type: 'post',
                 object_id: p.id
             }));
@@ -547,7 +552,7 @@ const MenusAdmin = () => {
                             onClick={() => setOpenAccordion(openAccordion === 'posts' ? '' : 'posts')}
                             className="w-full flex items-center justify-between p-4 font-bold text-sm text-gray-700 bg-gray-50 hover:bg-gray-100 transition-colors"
                         >
-                            <span>Posts</span>
+                            <span>Blogs</span>
                             <FontAwesomeIcon icon={openAccordion === 'posts' ? faChevronDown : faChevronRight} className="text-gray-400 text-xs" />
                         </button>
                         {openAccordion === 'posts' && (

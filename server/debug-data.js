@@ -1,20 +1,26 @@
-import pool from './db.js';
+async function test() {
+    let login = await fetch('http://localhost:5000/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'admin@tributo', password: 'admin' })
+    });
+    const data = await login.json();
+    const token = data.token;
+    console.log("Got token:", token ? "yes" : "no");
 
-async function checkData() {
-    try {
-        const tributeRes = await pool.query('SELECT id, name, birth_date, passing_date FROM tributes WHERE id = 2');
-        console.log('Tribute Birth Date Type:', typeof tributeRes.rows[0].birth_date);
-        console.log('Tribute Birth Date Value:', tributeRes.rows[0].birth_date);
-        console.log('Tribute:', JSON.stringify(tributeRes.rows[0], null, 2));
-
-        const mediaRes = await pool.query('SELECT id, type, LENGTH(url) as url_length FROM media WHERE tribute_id = 2');
-        console.log('Media:', JSON.stringify(mediaRes.rows, null, 2));
-
-        process.exit(0);
-    } catch (err) {
-        console.error(err);
-        process.exit(1);
-    }
+    // Now try to post
+    const res = await fetch('http://localhost:5000/api/tributes', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+        },
+        body: JSON.stringify({
+            name: 'Test Memorial',
+            dates: 'Jan 1, 1990 - Dec 31, 2020',
+            slug: 'test-memorial-' + Date.now()
+        })
+    });
+    console.log(res.status, await res.text());
 }
-
-checkData();
+test();

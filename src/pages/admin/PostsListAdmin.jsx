@@ -6,7 +6,7 @@ import { useTributeContext } from '../../context/TributeContext';
 import { decodeHtml } from '../../utils/htmlUtils';
 
 const PostsListAdmin = () => {
-    const { posts, deletePost } = useTributeContext();
+    const { posts, deletePost, showAlert, showToast } = useTributeContext();
 
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
@@ -15,13 +15,13 @@ const PostsListAdmin = () => {
                     <FontAwesomeIcon icon={faSearch} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
                         type="text"
-                        placeholder="Search posts..."
+                        placeholder="Search blogs..."
                         className="w-full pl-10 pr-4 py-2 rounded-md border border-gray-300 text-sm focus:ring-1 focus:ring-primary focus:border-primary outline-none"
                     />
                 </div>
                 <Link to="/admin/posts/new" className="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-opacity-90 transition-colors flex items-center gap-2">
                     <FontAwesomeIcon icon={faPlus} />
-                    Add New Post
+                    Add New Blog
                 </Link>
             </div>
 
@@ -64,7 +64,7 @@ const PostsListAdmin = () => {
                                 </td>
                                 <td className="px-6 py-4 text-right space-x-2">
                                     <Link
-                                        to={`/post/${post.slug}`}
+                                        to={`/blog/${post.slug}`}
                                         target="_blank"
                                         rel="noopener noreferrer"
                                         className="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-gray-100 text-gray-500 hover:text-blue-600 transition-colors"
@@ -83,9 +83,10 @@ const PostsListAdmin = () => {
                                         className="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors"
                                         title="Delete"
                                         onClick={() => {
-                                            if (window.confirm('Are you sure you want to delete this post?')) {
-                                                deletePost(post.id);
-                                            }
+                                            showAlert("Are you sure you want to delete this blog post? This action cannot be undone.", "error", "Confirm Delete", async () => {
+                                                const success = await deletePost(post.id);
+                                                if (success) showToast("Blog post deleted");
+                                            });
                                         }}
                                     >
                                         <FontAwesomeIcon icon={faTrash} />
@@ -96,7 +97,7 @@ const PostsListAdmin = () => {
                         {posts.length === 0 && (
                             <tr>
                                 <td colSpan="5" className="px-6 py-12 text-center text-gray-400">
-                                    <p className="text-lg">No posts found.</p>
+                                    <p className="text-lg">No blogs found.</p>
                                 </td>
                             </tr>
                         )}

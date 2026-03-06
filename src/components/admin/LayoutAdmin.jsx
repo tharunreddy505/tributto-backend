@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTachometerAlt, faBookOpen, faCog, faSignOutAlt, faPlus, faHome, faCommentAlt, faFileAlt, faNewspaper, faImage, faBars, faCode, faUser, faShoppingBag, faBox, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
+import { faTachometerAlt, faBookOpen, faCog, faSignOutAlt, faPlus, faHome, faCommentAlt, faFileAlt, faNewspaper, faImage, faBars, faCode, faUser, faShoppingBag, faBox, faTicketAlt, faCrown, faShieldAlt, faChartLine, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { useTributeContext } from '../../context/TributeContext';
 
 const LayoutAdmin = () => {
@@ -11,7 +11,36 @@ const LayoutAdmin = () => {
 
     const isActive = (path) => location.pathname === path;
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    const isAdmin = user.role === 'admin' || user.username === 'admin' || user.email?.includes('admin');
+    const isSuperAdmin = user.is_super_admin === true || user.role === 'superadmin';
+    const isAdmin = user.role === 'admin' || isSuperAdmin || user.username === 'admin' || user.email?.includes('admin');
+
+    const permissions = Array.isArray(user.permissions) ? user.permissions : [];
+    const hasPerm = (p) => isSuperAdmin || permissions.includes(p);
+
+    const navItems = [
+        { label: 'Dashboard', path: '/admin', icon: faTachometerAlt, section: 'Main', perm: 'dashboard', adminOnly: true },
+        { label: 'My Account', path: '/admin/my-account', icon: faChartLine, section: 'Main', alwaysShow: true },
+
+        { label: 'Memorials', path: '/admin/memorials', icon: faBookOpen, section: 'Content', perm: 'memorials', alwaysShow: true },
+        { label: 'Media Library', path: '/admin/media', icon: faImage, section: 'Content', perm: 'media' },
+        { label: 'Pages', path: '/admin/pages', icon: faFileAlt, section: 'Content', perm: 'pages' },
+        { label: 'Blogs', path: '/admin/posts', icon: faNewspaper, section: 'Content', perm: 'posts' },
+
+        { label: 'Products', path: '/admin/products', icon: faShoppingBag, section: 'Shop', perm: 'products' },
+        { label: 'Orders', path: '/admin/orders', icon: faBox, section: 'Shop', perm: 'orders' },
+        { label: 'Voucher Templates', path: '/admin/voucher-templates', icon: faTicketAlt, section: 'Shop', perm: 'products' },
+        { label: 'Subscriptions', path: '/admin/subscriptions', icon: faCrown, section: 'Shop', perm: 'subscriptions' },
+
+        { label: 'Menus', path: '/admin/menus', icon: faBars, section: 'Design', perm: 'menus' },
+        { label: 'Condolence Book', path: '/admin/condolences', icon: faCommentAlt, section: 'Design', perm: 'condolences' },
+
+        { label: 'User Management', path: '/admin/users', icon: faShieldAlt, section: 'System', perm: 'users', superOnly: true },
+        { label: 'Email Templates', path: '/admin/email-templates', icon: faEnvelope, section: 'System', perm: 'settings', superOnly: true },
+        { label: 'Email Logs', path: '/admin/email-logs', icon: faFileAlt, section: 'System', perm: 'settings', superOnly: true },
+        { label: 'System Settings', path: '/admin/settings', icon: faCog, section: 'System', perm: 'settings', superOnly: true },
+    ];
+
+    const sections = ['Main', 'Content', 'Shop', 'Design', 'System'];
 
     return (
         <div className="flex h-screen bg-gray-100 font-sans">
@@ -25,110 +54,55 @@ const LayoutAdmin = () => {
                         ) : (
                             <>
                                 <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-dark text-sm font-serif font-bold">T</div>
-                                <span>Tributoo Admin</span>
+                                <span>Tributoo {isSuperAdmin ? 'Super Admin' : isAdmin ? 'Admin' : 'Portal'}</span>
                             </>
                         )}
                     </Link>
                 </div>
 
                 {/* Navigation */}
-                {/* Navigation */}
                 <nav className="flex-1 overflow-y-auto py-4">
-                    <div className="px-3 mb-2 text-xs uppercase text-gray-500 font-semibold tracking-wider">Main</div>
-                    <ul>
-                        <li>
-                            <Link to="/admin" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
-                                <FontAwesomeIcon icon={faTachometerAlt} className="w-4" />
-                                <span>Dashboard</span>
-                            </Link>
-                        </li>
-                    </ul>
+                    {sections.map(section => {
+                        const items = navItems.filter(i => {
+                            if (i.section !== section) return false;
+                            if (i.superOnly && !isSuperAdmin) return false;
+                            if (i.adminOnly && !isAdmin) return false;
+                            if (i.alwaysShow) return true;
+                            return hasPerm(i.perm);
+                        });
 
-                    <div className="px-3 mt-6 mb-2 text-xs uppercase text-gray-500 font-semibold tracking-wider">Content</div>
-                    <ul className="space-y-1">
-                        <li>
-                            <Link to="/admin/memorials" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin/memorials') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
-                                <FontAwesomeIcon icon={faBookOpen} className="w-4" />
-                                <span>Memorials</span>
-                            </Link>
-                        </li>
-                        <li>
-                            <Link to="/admin/media" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin/media') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
-                                <FontAwesomeIcon icon={faImage} className="w-4" />
-                                <span>Media Library</span>
-                            </Link>
-                        </li>
-                        {isAdmin && (
-                            <>
-                                <li>
-                                    <Link to="/admin/pages" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin/pages') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
-                                        <FontAwesomeIcon icon={faFileAlt} className="w-4" />
-                                        <span>Pages</span>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/admin/posts" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin/posts') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
-                                        <FontAwesomeIcon icon={faNewspaper} className="w-4" />
-                                        <span>Posts</span>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/admin/products" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin/products') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
-                                        <FontAwesomeIcon icon={faShoppingBag} className="w-4" />
-                                        <span>Products</span>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/admin/orders" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin/orders') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
-                                        <FontAwesomeIcon icon={faBox} className="w-4" />
-                                        <span>Orders</span>
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/admin/voucher-templates" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin/voucher-templates') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
-                                        <FontAwesomeIcon icon={faTicketAlt} className="w-4" />
-                                        <span>Voucher Templates</span>
-                                    </Link>
-                                </li>
-                            </>
-                        )}
-                    </ul>
+                        if (items.length === 0) return null;
 
-                    {isAdmin && (
-                        <>
-                            <div className="px-3 mt-6 mb-2 text-xs uppercase text-gray-500 font-semibold tracking-wider">Appearance</div>
-                            <ul className="space-y-1">
-                                <li>
-                                    <Link to="/admin/menus" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin/menus') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
-                                        <FontAwesomeIcon icon={faBars} className="w-4" />
-                                        <span>Menus</span>
-                                    </Link>
-                                </li>
-                            </ul>
+                        return (
+                            <div key={section} className="mb-6">
+                                <div className="px-3 mb-2 text-xs uppercase text-gray-500 font-semibold tracking-wider">{section}</div>
+                                <ul className="space-y-1">
+                                    {items.map(item => (
+                                        <li key={item.path}>
+                                            <Link
+                                                to={item.path}
+                                                className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive(item.path) ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}
+                                            >
+                                                <div className="w-5 flex justify-center">
+                                                    <FontAwesomeIcon icon={item.icon} className="text-sm" />
+                                                </div>
+                                                <span className="text-sm">{item.label}</span>
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                        );
+                    })}
 
-                            <div className="px-3 mt-6 mb-2 text-xs uppercase text-gray-500 font-semibold tracking-wider">Social</div>
-                            <ul className="space-y-1">
-                                <li>
-                                    <Link to="/admin/condolences" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin/condolences') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
-                                        <FontAwesomeIcon icon={faCommentAlt} className="w-4" />
-                                        <span>Condolence Book</span>
-                                    </Link>
-                                </li>
-                            </ul>
-
-                            <div className="px-3 mt-6 mb-2 text-xs uppercase text-gray-500 font-semibold tracking-wider">System</div>
-                            <ul className="space-y-1">
-                                <li>
-                                    <Link to="/admin/settings" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin/settings') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
-                                        <FontAwesomeIcon icon={faCog} className="w-4" />
-                                        <span>Settings</span>
-                                    </Link>
-                                </li>
-                            </ul>
-                        </>
-                    )}
                     <div className="px-3 mt-6 mb-2 text-xs uppercase text-gray-500 font-semibold tracking-wider">Account</div>
                     <ul className="space-y-1">
+                        <li>
+                            <Link to="/admin/subscription" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin/subscription') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
+                                <FontAwesomeIcon icon={faCrown} className="w-4" />
+                                <span>Subscription</span>
+                            </Link>
+                        </li>
                         <li>
                             <Link to="/admin/account" className={`flex items-center gap-3 px-3 py-2 rounded-md transition-colors ${isActive('/admin/account') ? 'bg-primary text-white' : 'hover:bg-[#2c3338] hover:text-white'}`}>
                                 <FontAwesomeIcon icon={faUser} className="w-4" />
@@ -174,6 +148,7 @@ const LayoutAdmin = () => {
                         </button>
                         <h1 className="text-lg font-semibold text-gray-800">
                             {location.pathname === '/admin' && 'Dashboard'}
+                            {location.pathname === '/admin/my-account' && 'Memorial Analytics'}
                             {location.pathname === '/admin/memorials' && 'Manage Memorials'}
                             {location.pathname === '/admin/memorials/new' && 'Add New Memorial'}
                             {location.pathname === '/admin/media' && 'Media Library'}

@@ -1,0 +1,138 @@
+[
+  {
+    "slug": "payment_confirmation",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "en"
+  },
+  {
+    "slug": "subscription_expired",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "de"
+  },
+  {
+    "slug": "subscription_expired",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "en"
+  },
+  {
+    "slug": "subscription_expired",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "it"
+  },
+  {
+    "slug": "subscription_expiry_reminder",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "de"
+  },
+  {
+    "slug": "subscription_expiry_reminder",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "en"
+  },
+  {
+    "slug": "subscription_expiry_reminder",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "it"
+  },
+  {
+    "slug": "trial_5_days_reminder",
+    "timing_type": "immediate",
+    "timing_delay_value": 5,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "de"
+  },
+  {
+    "slug": "trial_5_days_reminder",
+    "timing_type": "immediate",
+    "timing_delay_value": 5,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "en"
+  },
+  {
+    "slug": "trial_5_days_reminder",
+    "timing_type": "immediate",
+    "timing_delay_value": 5,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "it"
+  },
+  {
+    "slug": "trial_expired_reminder",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "de"
+  },
+  {
+    "slug": "trial_expired_reminder",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "en"
+  },
+  {
+    "slug": "trial_expired_reminder",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "it"
+  },
+  {
+    "slug": "voucher_delivery",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "en"
+  },
+  {
+    "slug": "welcome_trial",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "de"
+  },
+  {
+    "slug": "welcome_trial",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "en"
+  },
+  {
+    "slug": "welcome_trial",
+    "timing_type": "immediate",
+    "timing_delay_value": 0,
+    "timing_delay_unit": "days",
+    "timing_reference": "trial_start",
+    "language": "it"
+  }
+]

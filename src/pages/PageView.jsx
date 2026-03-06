@@ -4,6 +4,7 @@ import { useTributeContext } from '../context/TributeContext';
 import Layout from '../components/layout/Layout';
 import { RenderContentWithShortcodes } from '../components/ContentPart';
 import TranslatedText from '../components/TranslatedText';
+import SEO from '../components/SEO';
 
 class PageErrorBoundary extends React.Component {
     constructor(props) {
@@ -77,6 +78,12 @@ const PageViewContent = () => {
 
     return (
         <Layout>
+            <SEO
+                title={page.seo_title || page.title}
+                description={page.seo_description}
+                keywords={page.seo_keywords}
+                ogImage={page.og_image}
+            />
             <div className="bg-[#FAF9F6] min-h-screen pt-32 pb-20">
                 <div className="container mx-auto max-w-5xl">
                     <h1 className="text-4xl md:text-5xl font-serif text-dark mb-12 text-center px-6">

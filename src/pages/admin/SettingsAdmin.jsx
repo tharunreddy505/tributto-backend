@@ -3,6 +3,8 @@ import { useTributeContext } from '../../context/TributeContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUpload, faSave, faImage } from '@fortawesome/free-solid-svg-icons';
 
+import { compressImage } from '../../utils/imageOptimizer';
+
 const SettingsAdmin = () => {
     const { settings, updateSettings, showToast } = useTributeContext();
     const [logo, setLogo] = React.useState(settings.logo || '');
@@ -21,25 +23,29 @@ const SettingsAdmin = () => {
         }
     }, [settings.logo, settings.site_title, settings.site_favicon, settings.googleTranslateApiKey]);
 
-    const handleLogoUpload = (e) => {
+    const handleLogoUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setLogo(reader.result);
-            };
-            reader.readAsDataURL(file);
+            try {
+                // Optimize logo: 800px max, 0.8 quality
+                const optimizedLogo = await compressImage(file, { maxWidth: 800, quality: 0.8 });
+                setLogo(optimizedLogo);
+            } catch (err) {
+                console.error("Error optimizing logo:", err);
+            }
         }
     };
 
-    const handleFaviconUpload = (e) => {
+    const handleFaviconUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setSiteFavicon(reader.result);
-            };
-            reader.readAsDataURL(file);
+            try {
+                // Favicon doesn't need to be large: 64px max
+                const optimizedFavicon = await compressImage(file, { maxWidth: 64, quality: 0.9 });
+                setSiteFavicon(optimizedFavicon);
+            } catch (err) {
+                console.error("Error optimizing favicon:", err);
+            }
         }
     };
 

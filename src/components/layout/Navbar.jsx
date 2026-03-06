@@ -29,12 +29,15 @@ const TranslatedNavTitle = ({ text }) => {
 
 const Navbar = () => {
     const { t, i18n } = useTranslation();
-    const { settings, primaryMenu, cart } = useTributeContext();
+    const { settings, primaryMenu, cart, isInitialized } = useTributeContext();
     const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
     const [menu, setMenu] = useState(null);
     const [isScrolled, setIsScrolled] = useState(false);
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(() => {
+        const userData = localStorage.getItem('user');
+        return userData ? JSON.parse(userData) : null;
+    });
 
     useEffect(() => {
         const checkAuth = () => {
@@ -159,15 +162,15 @@ const Navbar = () => {
                                 </Link>
                             )
                         ))
-                    ) : (
+                    ) : isInitialized ? (
                         <>
                             <Link to={getLocalizedUrl("/memorials")} className="hover:text-white transition-colors underline decoration-primary decoration-2 underline-offset-4">{t('menu.memorials')}</Link>
-                            <a href="#" className="hover:text-white transition-colors">{t('menu.features')}</a>
-                            <a href="#" className="hover:text-white transition-colors">{t('menu.testimonials')}</a>
-                            <a href="#" className="hover:text-white transition-colors">{t('menu.pricing')}</a>
-                            <a href="#" className="hover:text-white transition-colors">{t('menu.support')}</a>
+                            <a href="#features" className="hover:text-white transition-colors">{t('menu.features')}</a>
+                            <a href="#tributes" className="hover:text-white transition-colors">{t('menu.testimonials')}</a>
+                            <a href="#pricing" className="hover:text-white transition-colors">{t('menu.pricing')}</a>
+                            <a href="#faq" className="hover:text-white transition-colors">{t('menu.support')}</a>
                         </>
-                    )}
+                    ) : null}
                 </div>
 
                 {/* Desktop Actions */}
@@ -232,15 +235,15 @@ const Navbar = () => {
                                 )}
                             </div>
                         ))
-                    ) : (
+                    ) : isInitialized ? (
                         <>
                             <Link to={getLocalizedUrl("/memorials")} className="text-white/80 hover:text-white text-lg" onClick={() => setIsOpen(false)}>{t('menu.memorials')}</Link>
-                            <a href="#" className="text-white/80 hover:text-white text-lg">{t('menu.features')}</a>
-                            <a href="#" className="text-white/80 hover:text-white text-lg">{t('menu.testimonials')}</a>
-                            <a href="#" className="text-white/80 hover:text-white text-lg">{t('menu.pricing')}</a>
-                            <a href="#" className="text-white/80 hover:text-white text-lg">{t('menu.support')}</a>
+                            <a href="#features" className="text-white/80 hover:text-white text-lg" onClick={() => setIsOpen(false)}>{t('menu.features')}</a>
+                            <a href="#tributes" className="text-white/80 hover:text-white text-lg" onClick={() => setIsOpen(false)}>{t('menu.testimonials')}</a>
+                            <a href="#pricing" className="text-white/80 hover:text-white text-lg" onClick={() => setIsOpen(false)}>{t('menu.pricing')}</a>
+                            <a href="#faq" className="text-white/80 hover:text-white text-lg" onClick={() => setIsOpen(false)}>{t('menu.support')}</a>
                         </>
-                    )}
+                    ) : null}
                     {user ? (
                         <Link to="/admin" className="bg-primary text-dark text-center py-3 rounded-full font-bold" onClick={() => setIsOpen(false)}>
                             Dashboard

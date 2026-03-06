@@ -1,10 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSave, faArrowLeft, faImage, faTrash, faVideo, faPlus, faLink, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faSave, faArrowLeft, faImage, faTrash, faVideo, faPlus, faLink, faTimes, faEnvelope, faCrown, faGlobe, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { useTributeContext } from '../../context/TributeContext';
 import { Editor } from '@tinymce/tinymce-react';
 import MediaPickerModal from '../../components/admin/MediaPickerModal';
+import { API_URL } from '../../config';
+
+const LANGUAGES = [
+    { code: 'en', label: 'English', flag: '🇬🇧' },
+    { code: 'de', label: 'Deutsch', flag: '🇩🇪' },
+    { code: 'it', label: 'Italiano', flag: '🇮🇹' },
+];
 import {
     DndContext,
     closestCenter,
@@ -22,53 +29,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 
-const fileToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
-    });
-};
-
-const compressImage = (file) => {
-    return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = (event) => {
-            const img = new Image();
-            img.src = event.target.result;
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                let width = img.width;
-                let height = img.height;
-
-                const MAX_SIZE = 800;
-                if (width > height) {
-                    if (width > MAX_SIZE) {
-                        height *= MAX_SIZE / width;
-                        width = MAX_SIZE;
-                    }
-                } else {
-                    if (height > MAX_SIZE) {
-                        width *= MAX_SIZE / height;
-                        height = MAX_SIZE;
-                    }
-                }
-
-                canvas.width = width;
-                canvas.height = height;
-
-                const ctx = canvas.getContext('2d');
-                ctx.drawImage(img, 0, 0, width, height);
-                const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
-                resolve(dataUrl);
-            };
-            img.onerror = error => reject(error);
-        };
-        reader.onerror = error => reject(error);
-    });
-};
+import { compressImage, compressImageToBlob, fileToBase64 } from '../../utils/imageOptimizer';
 
 const SortablePhoto = ({ id, src, onRemove, index }) => {
     const {
@@ -117,8 +78,11 @@ const SortablePhoto = ({ id, src, onRemove, index }) => {
 const EditMemorialAdmin = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { tributes, updateTribute, addMedia, removeMedia, isInitialized, showToast, reorderMedia } = useTributeContext();
+    const { tributes, updateTribute, addMedia, uploadMediaFile, removeMedia, fetchTributes, fetchMedia, isInitialized, showToast, showAlert, reorderMedia, getAuthHeaders } = useTributeContext();
     const [loading, setLoading] = useState(false);
+    const [loadingStatus, setLoadingStatus] = useState('');
+    const [activeLang, setActiveLang] = useState('en');
+    const [langVersions, setLangVersions] = useState({});
     const [formData, setFormData] = useState({
         name: '',
         birthDate: '',
@@ -129,7 +93,8 @@ const EditMemorialAdmin = () => {
         images: [],
         videos: [],
         videoUrls: [],
-        coverUrl: null
+        coverUrl: null,
+        status: 'public'
     });
 
     const [newMedia, setNewMedia] = useState({
@@ -137,13 +102,31 @@ const EditMemorialAdmin = () => {
         videos: []
     });
 
+    const [previews, setPreviews] = useState({
+        photo: null,
+        cover: null,
+        images: [],
+        videos: []
+    });
+
     const [hasLoadedData, setHasLoadedData] = useState(false);
     const [mediaPicker, setMediaPicker] = useState({ isOpen: false, callback: null, type: 'image' });
+    const [authorInfo, setAuthorInfo] = useState(null);
+    const hasFetchedAuthor = useRef(false);
+
+    const userStr = localStorage.getItem('user');
+    const currentUser = userStr ? JSON.parse(userStr) : null;
+    const isAdminUser = currentUser && (
+        currentUser.role === 'admin' ||
+        currentUser.isAdmin ||
+        currentUser.username === 'admin' ||
+        currentUser.email?.includes('admin')
+    );
 
     useEffect(() => {
         if (isInitialized && !hasLoadedData) {
-            const tribute = tributes.find(t => String(t.id) === id);
-            if (tribute) {
+            const found = tributes.find(t => String(t.id) === id);
+            if (found) {
                 const formatDateForInput = (dateStr) => {
                     if (!dateStr) return '';
                     try {
@@ -153,25 +136,67 @@ const EditMemorialAdmin = () => {
                     } catch (e) { return ''; }
                 };
 
+                const baseName = found.name || '';
+                const baseBio = found.bio || found.text || '';
+
                 setFormData({
-                    name: tribute.name || '',
-                    birthDate: formatDateForInput(tribute.birthDate),
-                    passingDate: formatDateForInput(tribute.passingDate),
-                    bio: tribute.bio || tribute.text || '',
-                    photo: tribute.image || tribute.photo || null,
-                    slug: tribute.slug || '',
-                    images: tribute.images || [],
-                    videos: tribute.videos || [],
-                    videoUrls: tribute.videoUrls && tribute.videoUrls.length > 0 ? tribute.videoUrls : [''],
-                    coverUrl: tribute.coverUrl || null
+                    name: baseName,
+                    birthDate: formatDateForInput(found.birthDate),
+                    passingDate: formatDateForInput(found.passingDate),
+                    bio: baseBio,
+                    photo: found.image || found.photo || null,
+                    slug: found.slug || '',
+                    images: found.images || [],
+                    videos: found.videos || [],
+                    videoUrls: found.videoUrls && found.videoUrls.length > 0 ? found.videoUrls : [''],
+                    coverUrl: found.coverUrl || null,
+                    authorName: found.authorName || null,
+                    packageName: found.packageName || null,
+                    status: found.status || 'public'
                 });
                 setHasLoadedData(true);
+
+                // Fetch translations for all languages
+                const token = localStorage.getItem('token');
+                const headers = token ? { Authorization: `Bearer ${token}` } : {};
+                const fetchAllTranslations = async () => {
+                    const versions = {};
+                    for (const lang of LANGUAGES) {
+                        try {
+                            const r = await fetch(`${API_URL}/api/tributes/${id}/translations/${lang.code}`, { headers });
+                            if (r.ok) {
+                                const d = await r.json();
+                                versions[lang.code] = { name: d.name || baseName, bio: d.bio || baseBio };
+                            } else {
+                                versions[lang.code] = { name: baseName, bio: baseBio };
+                            }
+                        } catch {
+                            versions[lang.code] = { name: baseName, bio: baseBio };
+                        }
+                    }
+                    setLangVersions(versions);
+                };
+                fetchAllTranslations();
+
+                // Fetch Author Info (Admin Only)
+                const authorId = found.userId || found.user_id || found.author_id;
+                if (isAdminUser && authorId && !hasFetchedAuthor.current) {
+                    hasFetchedAuthor.current = true;
+                    fetch(`${API_URL}/api/subscriptions/user/${String(authorId).trim()}`, { headers })
+                        .then(r => r.ok ? r.json() : null)
+                        .then(data => { if (data && data.user) setAuthorInfo(data); })
+                        .catch(err => console.error('Fetch Author Error:', err));
+                }
             }
         }
-    }, [id, tributes, isInitialized, hasLoadedData]);
+    }, [id, tributes, isInitialized, hasLoadedData, isAdminUser]);
 
     useEffect(() => {
         setHasLoadedData(false);
+        hasFetchedAuthor.current = false;
+        setAuthorInfo(null);
+        setLangVersions({});
+        setActiveLang('en');
     }, [id]);
 
     const handleInputChange = (e) => {
@@ -179,72 +204,101 @@ const EditMemorialAdmin = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handlePhotoUpload = async (e) => {
+    const handlePhotoUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
-            try {
-                const base64 = await compressImage(file);
-                setFormData(prev => ({ ...prev, photo: base64 }));
-            } catch (error) { console.error("Error converting file:", error); }
+            setFormData(prev => ({ ...prev, photo: file }));
+            if (previews.photo && previews.photo.startsWith('blob:')) URL.revokeObjectURL(previews.photo);
+            setPreviews(prev => ({ ...prev, photo: URL.createObjectURL(file) }));
         }
     };
 
-    const handleCoverUpload = async (e) => {
+    const handleCoverUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
-            try {
-                const base64 = await compressImage(file);
-                setFormData(prev => ({ ...prev, coverUrl: base64 }));
-            } catch (error) { console.error("Error converting cover file:", error); }
+            setFormData(prev => ({ ...prev, coverUrl: file }));
+            if (previews.cover && previews.cover.startsWith('blob:')) URL.revokeObjectURL(previews.cover);
+            setPreviews(prev => ({ ...prev, cover: URL.createObjectURL(file) }));
         }
     };
 
-    const handleGalleryUpload = async (e, type) => {
+    const handleGalleryUpload = (e, type) => {
         const files = Array.from(e.target.files);
         if (files.length > 0) {
-            try {
-                const promises = files.map(file => {
-                    if (file.size > 100 * 1024 * 1024) {
-                        alert(`File ${file.name} is too large (max 100MB). It will be skipped.`);
-                        return null;
-                    }
-                    if (file.type.startsWith('image/')) {
-                        return compressImage(file);
-                    } else {
-                        return fileToBase64(file);
-                    }
-                });
-                const results = await Promise.all(promises);
-                const base64Files = results.filter(f => f !== null);
+            // Apply limits for non-admin users on free plans
+            const isFreePlan = !isAdminUser && (!formData.packageName || formData.packageName.toLowerCase().includes('free'));
 
-                setFormData(prev => ({
-                    ...prev,
-                    [type]: [...(prev[type] || []), ...base64Files]
-                }));
-                setNewMedia(prev => ({
-                    ...prev,
-                    [type]: [...prev[type], ...base64Files]
-                }));
+            if (isFreePlan) {
+                if (type === 'videos') {
+                    showAlert('Video uploads are restricted in the free version.', 'info', 'Feature Restricted');
+                    return;
+                }
 
-            } catch (error) { console.error(`Error converting ${type}:`, error); }
+                if (type === 'images') {
+                    const currentCount = formData.images?.length || 0;
+                    if (currentCount + files.length > 5) {
+                        showAlert('Limit of 5 images reached for free version.', 'warning');
+                        const sliceCount = 5 - currentCount;
+                        if (sliceCount <= 0) return;
+                        files.splice(sliceCount);
+                    }
+                }
+            }
+
+            const ValidFiles = files.filter(file => {
+                if (file.size > 100 * 1024 * 1024) {
+                    showAlert(`File ${file.name} is too large (max 100MB). It will be skipped.`, "warning");
+                    return false;
+                }
+                return true;
+            });
+
+            setFormData(prev => ({
+                ...prev,
+                [type]: [...(prev[type] || []), ...ValidFiles]
+            }));
+
+            setNewMedia(prev => ({
+                ...prev,
+                [type]: [...prev[type], ...ValidFiles]
+            }));
+
+            const newPreviews = ValidFiles.map(f => URL.createObjectURL(f));
+            setPreviews(prev => ({
+                ...prev,
+                [type]: [...(prev[type] || []), ...newPreviews]
+            }));
         }
     };
 
     const removeGalleryItem = async (type, index) => {
         const itemToRemove = formData[type][index];
-        if (typeof itemToRemove === 'object' && itemToRemove.id) {
-            await removeMedia(itemToRemove.id);
-        }
-        setFormData(prev => ({
-            ...prev,
-            [type]: prev[type].filter((_, i) => i !== index)
-        }));
-        if (typeof itemToRemove === 'string') {
+        const isFile = itemToRemove instanceof File;
+
+        if (isFile) {
+            // Find which File this is in the local file list
+            const fileIdx = formData[type].slice(0, index).filter(it => it instanceof File).length;
+            setPreviews(prev => {
+                const updated = [...prev[type]];
+                const removedUrl = updated.splice(fileIdx, 1)[0];
+                if (removedUrl && removedUrl.startsWith('blob:')) URL.revokeObjectURL(removedUrl);
+                return { ...prev, [type]: updated };
+            });
+
             setNewMedia(prev => ({
                 ...prev,
                 [type]: prev[type].filter(item => item !== itemToRemove)
             }));
         }
+
+        if (typeof itemToRemove === 'object' && itemToRemove.id) {
+            await removeMedia(itemToRemove.id);
+        }
+
+        setFormData(prev => ({
+            ...prev,
+            [type]: prev[type].filter((_, i) => i !== index)
+        }));
     };
 
     const sensors = useSensors(
@@ -288,40 +342,163 @@ const EditMemorialAdmin = () => {
         if (e) e.preventDefault();
         setLoading(true);
 
-        const birthDateFormatted = new Date(formData.birthDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-        const passingDateFormatted = new Date(formData.passingDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        try {
+            // 1. Sync the active language version with the shared formData (name/bio)
+            const syncedLangVersions = {
+                ...langVersions,
+                [activeLang]: {
+                    ...(langVersions[activeLang] || {}),
+                    name: formData.name,
+                    bio: formData.bio
+                }
+            };
 
-        const updatedData = {
-            ...formData,
-            dates: `${birthDateFormatted} - ${passingDateFormatted}`,
-            text: formData.bio,
-            image: formData.photo,
-            videoUrls: (formData.videoUrls || []).filter(url => url && url.trim() !== '')
+            // 2. Use active lang as the primary tribute fields (updates the main row)
+            const primaryLangData = syncedLangVersions[activeLang] || syncedLangVersions['en'] || {};
+
+            const birthDateFormatted = new Date(formData.birthDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            const passingDateFormatted = new Date(formData.passingDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+            const hasNewProfileImages = formData.photo instanceof File || formData.coverUrl instanceof File;
+            setLoadingStatus('Updating memorial...');
+
+            // Compress images ONLY NOW before sending to payload
+            // 1. Process Profile & Cover Images IN PARALLEL
+            const [photoPayload, coverPayload] = await Promise.all([
+                formData.photo instanceof File
+                    ? compressImage(formData.photo, { maxWidth: 600, quality: 0.5 })
+                    : Promise.resolve(formData.photo),
+                formData.coverUrl instanceof File
+                    ? compressImage(formData.coverUrl, { maxWidth: 1200, quality: 0.5 })
+                    : Promise.resolve(formData.coverUrl)
+            ]);
+
+            const updatedData = {
+                name: primaryLangData.name || formData.name,
+                dates: `${birthDateFormatted} - ${passingDateFormatted}`,
+                birthDate: formData.birthDate,
+                passingDate: formData.passingDate,
+                bio: primaryLangData.bio || formData.bio,
+                photo: photoPayload,
+                coverUrl: coverPayload,
+                slug: formData.slug,
+                videoUrls: (formData.videoUrls || []).filter(url => url && url.trim() !== ''),
+                status: formData.status
+            };
+
+            setLoadingStatus('Updating memorial...');
+            const success = await updateTribute(Number(id), updatedData); // No longer silent, will refresh context
+
+            if (success) {
+                // 3. Save all language translations IN PARALLEL
+                const token = localStorage.getItem('token');
+                const headers = { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) };
+
+                setLoadingStatus('Updating memorial...');
+                const translationPromises = LANGUAGES.map(lang => {
+                    const v = syncedLangVersions[lang.code];
+                    if (!v) return Promise.resolve();
+                    return fetch(`${API_URL}/api/tributes/${id}/translations/${lang.code}`, {
+                        method: 'PUT',
+                        headers,
+                        body: JSON.stringify({ name: v.name || '', bio: v.bio || '' })
+                    }).catch(e => console.error(`Save translation error (${lang.code}):`, e));
+                });
+
+                await Promise.all(translationPromises);
+
+                const totalMedia = (newMedia.images?.length || 0) + (newMedia.videos?.length || 0);
+                if (totalMedia > 0) {
+                    setLoadingStatus('Updating memorial...');
+                    let uploadedCount = 0;
+
+                    // Upload IMAGES sequentially
+                    if (newMedia.images?.length > 0) {
+                        for (const img of newMedia.images) {
+                            try {
+                                if (img instanceof File) {
+                                    const blob = await compressImageToBlob(img, { maxWidth: 1000, quality: 0.6 });
+                                    const compressedFile = new File([blob], img.name, { type: 'image/jpeg' });
+                                    await uploadMediaFile(Number(id), 'image', compressedFile, true);
+                                } else {
+                                    await addMedia(Number(id), 'image', img, true);
+                                }
+                            } catch (err) {
+                                console.error("Gallery image upload error:", err);
+                            } finally {
+                                uploadedCount++;
+                                setLoadingStatus('Updating memorial...');
+                            }
+                        }
+                    }
+
+                    // Upload VIDEOS sequentially
+                    if (newMedia.videos?.length > 0) {
+                        for (const vid of newMedia.videos) {
+                            try {
+                                if (vid instanceof File) {
+                                    await uploadMediaFile(Number(id), 'video', vid, true);
+                                } else {
+                                    await addMedia(Number(id), 'video', vid, true);
+                                }
+                            } catch (err) {
+                                console.error("Gallery video upload error:", err);
+                            } finally {
+                                uploadedCount++;
+                                setLoadingStatus('Updating memorial...');
+                            }
+                        }
+                    }
+                }
+
+                setLoadingStatus("Finishing up...");
+
+                setLoading(false);
+                showToast("Memorial updated successfully!", "success");
+                navigate('/admin/memorials');
+
+                // Background refresh
+                fetchTributes?.();
+                fetchMedia?.();
+            } else {
+                setLoading(false);
+                showToast("Failed to update memorial info.", "error");
+            }
+        } catch (error) {
+            console.error("Critical submission error:", error);
+            setLoading(false);
+            showToast("An error occurred during save.", "error");
+        } finally {
+            setLoading(false);
+            setNewMedia({ images: [], videos: [] });
+        }
+    };
+
+    // Called when switching language tabs — build the updated versions synchronously
+    // so we can immediately read the target language from the same updated object
+    const handleLangSwitch = (newLang) => {
+        // 1. Build the COMPLETE updated map synchronously
+        const updatedVersions = {
+            ...langVersions,
+            [activeLang]: {
+                ...(langVersions[activeLang] || {}),
+                name: formData.name,
+                bio: formData.bio
+            }
         };
 
-        const success = await updateTribute(Number(id), updatedData);
+        // 2. Persist to state
+        setLangVersions(updatedVersions);
 
-        if (success) {
-            showToast("Memorial updated successfully!", "success");
-        } else {
-            showToast("Failed to update memorial. Please check the console.", "error");
-        }
+        // 3. Load new language from the SAME updated object (not stale closure)
+        const target = updatedVersions[newLang] || {};
+        setFormData(prev => ({
+            ...prev,
+            name: target.name !== undefined ? target.name : prev.name,
+            bio: target.bio !== undefined ? target.bio : prev.bio
+        }));
 
-        if (newMedia.images.length > 0) {
-            for (const img of newMedia.images) {
-                await addMedia(Number(id), 'image', img);
-            }
-        }
-        if (newMedia.videos.length > 0) {
-            for (const vid of newMedia.videos) {
-                await addMedia(Number(id), 'video', vid);
-            }
-        }
-
-        setNewMedia({ images: [], videos: [] });
-        setHasLoadedData(false);
-        setLoading(false);
-        navigate('/admin/memorials');
+        setActiveLang(newLang);
     };
 
     return (
@@ -335,8 +512,36 @@ const EditMemorialAdmin = () => {
 
             <form onSubmit={handleSubmit} className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-20">
                 <div className="lg:col-span-2 space-y-6">
+
+                    {/* Language Tabs */}
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                        <div className="flex border-b border-gray-100">
+                            <div className="flex items-center gap-2 px-4 py-3 text-gray-400 text-xs font-bold uppercase border-r border-gray-100">
+                                <FontAwesomeIcon icon={faGlobe} /> Language
+                            </div>
+                            {LANGUAGES.map(lang => (
+                                <button
+                                    key={lang.code}
+                                    type="button"
+                                    onClick={() => handleLangSwitch(lang.code)}
+                                    className={`flex items-center gap-1.5 px-5 py-3 text-sm font-semibold border-b-2 transition-all ${activeLang === lang.code
+                                        ? 'border-primary text-primary'
+                                        : 'border-transparent text-gray-400 hover:text-gray-700'
+                                        }`}
+                                >
+                                    <span>{lang.flag}</span> {lang.label}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="p-4 bg-blue-50/60">
+                            <p className="text-xs text-blue-500">
+                                Editing <strong>{LANGUAGES.find(l => l.code === activeLang)?.label}</strong> version. Fields below (Full Name &amp; Life Story) are per-language. All other settings are shared across languages.
+                            </p>
+                        </div>
+                    </div>
+
                     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                        <label className="block text-sm font-bold text-gray-700 mb-2">Full Name</label>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Full Name ({activeLang.toUpperCase()})</label>
                         <input
                             type="text"
                             name="name"
@@ -364,8 +569,11 @@ const EditMemorialAdmin = () => {
                     </div>
 
                     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                        <label className="block text-sm font-bold text-gray-700 mb-2">Life Story / Bio</label>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">
+                            Life Story / Bio — {LANGUAGES.find(l => l.code === activeLang)?.flag} {LANGUAGES.find(l => l.code === activeLang)?.label}
+                        </label>
                         <Editor
+                            key={`bio-editor-${activeLang}`}
                             apiKey={import.meta.env.VITE_TINYMCE_KEY}
                             value={formData.bio}
                             init={{
@@ -408,8 +616,13 @@ const EditMemorialAdmin = () => {
                                         strategy={rectSortingStrategy}
                                     >
                                         {formData.images.map((item, index) => {
-                                            const src = typeof item === 'object' ? item.url : item;
-                                            const id = (typeof item === 'object' && item.id) ? item.id : `img-${index}`;
+                                            const isFile = item instanceof File;
+                                            let src = (typeof item === 'object' && item.url) ? item.url : item;
+                                            if (isFile) {
+                                                const fileIndex = formData.images.slice(0, index).filter(it => it instanceof File).length;
+                                                src = previews.images[fileIndex];
+                                            }
+                                            const id = (!isFile && typeof item === 'object' && item.id) ? item.id : `img-${index}`;
                                             return (
                                                 <SortablePhoto
                                                     key={id}
@@ -441,7 +654,12 @@ const EditMemorialAdmin = () => {
                             <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Videos</label>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
                                 {formData.videos.map((item, index) => {
-                                    const src = typeof item === 'object' ? item.url : item;
+                                    const isFile = item instanceof File;
+                                    let src = (typeof item === 'object' && item.url) ? item.url : item;
+                                    if (isFile) {
+                                        const fileIndex = formData.videos.slice(0, index).filter(it => it instanceof File).length;
+                                        src = previews.videos[fileIndex];
+                                    }
                                     return (
                                         <div key={index} className="relative aspect-video rounded-lg overflow-hidden group bg-black border border-gray-200">
                                             <video src={src} className="w-full h-full object-cover opacity-80" />
@@ -519,12 +737,42 @@ const EditMemorialAdmin = () => {
                 <div className="space-y-6">
                     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
                         <h3 className="text-sm font-bold text-gray-700 uppercase mb-4 border-b border-gray-100 pb-2">Update</h3>
+
+                        <div className="mb-6">
+                            <label className="block text-xs font-bold text-gray-500 uppercase mb-2 tracking-wider">Publication status</label>
+                            <select
+                                name="status"
+                                value={formData.status}
+                                onChange={handleInputChange}
+                                className="w-full bg-gray-50 border border-gray-200 rounded px-4 py-2.5 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none font-medium text-gray-700 appearance-none"
+                                style={{
+                                    backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239CA3AF'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E")`,
+                                    backgroundPosition: 'right 1rem center',
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundSize: '1em'
+                                }}
+                            >
+                                <option value="public">Public</option>
+                                <option value="draft">Draft</option>
+                                <option value="private">Private</option>
+                            </select>
+                            <p className="text-[10px] text-gray-400 mt-2 italic">
+                                {formData.status === 'public' ? 'Visible to everyone on the internet.' :
+                                    formData.status === 'draft' ? 'Only visible to you (Owner/Admin). Use while editing.' :
+                                        'Only visible to you and people with the direct link.'}
+                            </p>
+                        </div>
+
                         <button
                             type="submit"
                             disabled={loading}
                             className="w-full bg-primary text-white py-2 rounded font-bold hover:bg-opacity-90 disabled:opacity-70 transition-all flex justify-center items-center gap-2"
                         >
-                            {loading ? 'Updating...' : <><FontAwesomeIcon icon={faSave} /> Update Memorial</>}
+                            {loading ? (
+                                <><FontAwesomeIcon icon={faSpinner} className="animate-spin" /> {loadingStatus || 'Updating...'}</>
+                            ) : (
+                                <><FontAwesomeIcon icon={faSave} /> Update Memorial</>
+                            )}
                         </button>
                     </div>
 
@@ -555,9 +803,9 @@ const EditMemorialAdmin = () => {
                     <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
                         <h3 className="text-sm font-bold text-gray-700 uppercase mb-4 border-b border-gray-100 pb-2">Featured Image</h3>
                         <div className="text-center">
-                            {formData.photo ? (
+                            {(formData.photo || previews.photo) ? (
                                 <div className="mb-4 relative group">
-                                    <img src={formData.photo} alt="Preview" className="w-full h-48 object-cover rounded" />
+                                    <img src={previews.photo || formData.photo} alt="Preview" className="w-full h-48 object-cover rounded" />
                                     <button
                                         type="button"
                                         onClick={() => setFormData(prev => ({ ...prev, photo: null }))}
@@ -589,9 +837,9 @@ const EditMemorialAdmin = () => {
                             className="relative aspect-[21/9] rounded-lg overflow-hidden border-2 border-dashed border-gray-200 hover:border-primary transition-colors cursor-pointer group bg-gray-50 flex items-center justify-center"
                             onClick={() => document.getElementById('cover-upload').click()}
                         >
-                            {formData.coverUrl ? (
+                            {(formData.coverUrl || previews.cover) ? (
                                 <>
-                                    <img src={formData.coverUrl} alt="Cover" className="w-full h-full object-cover" />
+                                    <img src={previews.cover || formData.coverUrl} alt="Cover" className="w-full h-full object-cover" />
                                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold">
                                         Change Cover Image
                                     </div>
@@ -606,6 +854,53 @@ const EditMemorialAdmin = () => {
                         </div>
                         <p className="text-[10px] text-gray-400 mt-2">Recommended size: 1920x600px. This image will show as the background on the memorial page.</p>
                     </div>
+
+                    {/* Author Widget */}
+                    {(isAdminUser || formData.authorName) && (
+                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 mt-6">
+                            <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">Author</label>
+                            {authorInfo?.user || formData.authorName ? (
+                                <div className="flex items-center gap-3">
+                                    <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 font-bold">
+                                        {(authorInfo?.user?.username || formData.authorName || 'U').charAt(0).toUpperCase()}
+                                    </div>
+                                    <div className="min-w-0">
+                                        <p className="font-bold text-gray-900 truncate">{authorInfo?.user?.username || formData.authorName}</p>
+                                        {(authorInfo?.user?.email) && (
+                                            <p className="text-xs text-gray-400 truncate flex items-center gap-1">
+                                                <FontAwesomeIcon icon={faEnvelope} className="text-[10px]" />
+                                                {authorInfo.user.email}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            ) : (
+                                <p className="text-xs text-gray-400 italic">No author info found</p>
+                            )}
+                        </div>
+                    )}
+
+                    {/* Package Widget */}
+                    {(isAdminUser || formData.packageName) && (
+                        <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 mt-6">
+                            <label className="block text-sm font-bold text-gray-700 mb-4 uppercase tracking-wider">Subscription Package</label>
+                            {authorInfo?.subscription || formData.packageName ? (
+                                <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                        <FontAwesomeIcon icon={faCrown} />
+                                    </div>
+                                    <div>
+                                        <p className="font-bold text-sm">{authorInfo?.subscription?.product_name || formData.packageName || 'Standard'}</p>
+                                        <p className="text-[10px] text-primary font-black uppercase">
+                                            {authorInfo?.subscription?._linked_via_memorial ? 'LINKED VIA MEMORIAL' : 'ACTIVE'}
+                                        </p>
+                                    </div>
+                                </div>
+                            ) : (
+                                <p className="text-xs text-gray-400 italic">No active subscription found</p>
+                            )}
+                        </div>
+                    )}
                 </div>
             </form>
 

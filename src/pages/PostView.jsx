@@ -4,6 +4,7 @@ import { useTributeContext } from '../context/TributeContext';
 import { useTranslation } from 'react-i18next';
 import Layout from '../components/layout/Layout';
 import useGoogleTranslate from '../hooks/useGoogleTranslate';
+import SEO from '../components/SEO';
 
 const TranslatedText = ({ text }) => {
     const translated = useGoogleTranslate(text);
@@ -95,8 +96,8 @@ const PostView = () => {
             <Layout>
                 <div className="min-h-screen bg-[#FAF9F6] flex items-center justify-center pt-32">
                     <div className="text-center">
-                        <h1 className="text-4xl font-serif mb-4">{t('not_found.title', 'Post Not Found')}</h1>
-                        <p className="text-gray-500">{t('not_found.message', 'The requested post could not be found.')}</p>
+                        <h1 className="text-4xl font-serif mb-4">{t('not_found.title', 'Blog Not Found')}</h1>
+                        <p className="text-gray-500">{t('not_found.message', 'The requested blog could not be found.')}</p>
                         <Link to={getLocalizedUrl("/blog")} className="mt-8 inline-block px-6 py-2 bg-primary text-white rounded font-bold hover:bg-opacity-90 transition-all">
                             {t('blog.back_to_blog', 'Back to Blog')}
                         </Link>
@@ -111,6 +112,12 @@ const PostView = () => {
 
     return (
         <Layout>
+            <SEO
+                title={post.seo_title || post.title}
+                description={post.seo_description}
+                keywords={post.seo_keywords}
+                ogImage={post.og_image || post.featured_image}
+            />
             <div className="bg-[#FAF9F6] min-h-screen pt-32 pb-20">
                 <div className="container mx-auto px-4 max-w-4xl">
                     <Link to={getLocalizedUrl("/blog")} className="inline-flex items-center text-gray-500 hover:text-primary transition-colors mb-8 font-medium text-sm group">

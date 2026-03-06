@@ -6,17 +6,25 @@ const MemorialsGrid = () => {
     const { tributes, isInitialized } = useTributeContext();
     const [activeFilter, setActiveFilter] = useState('All');
 
-    // Get all unique starting letters from tributes
-    const alphabet = useMemo(() => {
-        const letters = tributes.map(t => t.name.charAt(0).toUpperCase());
-        return ['All', ...Array.from(new Set(letters)).sort()];
+    // Filter out draft/expired memorials for the public view
+    const publicTributes = useMemo(() => {
+        return tributes.filter(t =>
+            (t.subscriptionStatus === 'active' || t.subscriptionStatus === 'trial' || t.isLifetime === true) &&
+            (t.status === 'public' || !t.status)
+        );
     }, [tributes]);
+
+    // Get all unique starting letters from public tributes
+    const alphabet = useMemo(() => {
+        const letters = publicTributes.map(t => t.name.charAt(0).toUpperCase());
+        return ['All', ...Array.from(new Set(letters)).sort()];
+    }, [publicTributes]);
 
     // Filter tributes based on active letter
     const filteredTributes = useMemo(() => {
-        if (activeFilter === 'All') return tributes;
-        return tributes.filter(t => t.name.charAt(0).toUpperCase() === activeFilter);
-    }, [tributes, activeFilter]);
+        if (activeFilter === 'All') return publicTributes;
+        return publicTributes.filter(t => t.name.charAt(0).toUpperCase() === activeFilter);
+    }, [publicTributes, activeFilter]);
 
     if (!isInitialized) {
         return (
@@ -57,7 +65,7 @@ const MemorialsGrid = () => {
                             <div className="absolute inset-0">
                                 <img
                                     src={tribute.images?.[0]?.url || tribute.photo || 'https://images.unsplash.com/photo-1516315609425-46aa1d5a7d7d?q=80&w=2667&auto=format&fit=crop'}
-                                    alt={tribute.name}
+                                    alt={tribute.photoMeta?.alt_text || tribute.name}
                                     className="h-full w-full object-cover grayscale-[20%] transition-transform duration-700 group-hover:scale-105"
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent"></div>

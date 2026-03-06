@@ -15,22 +15,38 @@ export const TributeProvider = ({ children }) => {
     const [posts, setPosts] = useState([]);
     const [products, setProducts] = useState([]);
     const [toast, setToast] = useState(null);
+    const [alertConfig, setAlertConfig] = useState(null);
     const [settings, setSettings] = useState({
         logo: localStorage.getItem('site_logo') || null,
         site_title: localStorage.getItem('site_title') || 'Online memorial page - tributoo.com',
         site_favicon: localStorage.getItem('site_favicon') || null
     });
     const [media, setMedia] = useState([]);
-    const [primaryMenu, setPrimaryMenu] = useState(null);
+    const [primaryMenu, setPrimaryMenu] = useState(() => {
+        const saved = localStorage.getItem('tributoo_primary_menu');
+        return saved ? JSON.parse(saved) : null;
+    });
     const [isInitialized, setIsInitialized] = useState(false);
     const [cart, setCart] = useState(() => {
         const savedCart = localStorage.getItem('tributoo_cart');
         return savedCart ? JSON.parse(savedCart) : [];
     });
+    const [appliedCoupon, setAppliedCoupon] = useState(() => {
+        const savedCoupon = sessionStorage.getItem('tributoo_coupon');
+        return savedCoupon ? JSON.parse(savedCoupon) : null;
+    });
 
     useEffect(() => {
         localStorage.setItem('tributoo_cart', JSON.stringify(cart));
     }, [cart]);
+
+    useEffect(() => {
+        if (appliedCoupon) {
+            sessionStorage.setItem('tributoo_coupon', JSON.stringify(appliedCoupon));
+        } else {
+            sessionStorage.removeItem('tributoo_coupon');
+        }
+    }, [appliedCoupon]);
 
     const getAuthHeaders = () => {
         const token = localStorage.getItem('token');
@@ -57,7 +73,10 @@ export const TributeProvider = ({ children }) => {
 
     const fetchTributes = async () => {
         try {
-            const res = await fetch(`${API_URL}/tributes`, { cache: 'no-store' });
+            const res = await fetch(`${API_URL}/tributes`, {
+                cache: 'no-store',
+                headers: getAuthHeaders()
+            });
             if (!res.ok) throw new Error("Failed to fetch tributes");
             const data = await res.json();
             setTributes(data);
@@ -134,6 +153,20 @@ export const TributeProvider = ({ children }) => {
         } catch (e) { console.error("Remove Media Error:", e); return false; }
     };
 
+    const updateMediaDetails = async (id, details) => {
+        try {
+            const res = await fetch(`${API_URL}/media/${id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+                body: JSON.stringify(details)
+            });
+            if (!res.ok) throw new Error("Update failed");
+            const data = await res.json();
+            setMedia(prev => prev.map(m => m.id === id ? data : m));
+            return data;
+        } catch (e) { console.error("Update Media Details Error:", e); }
+    };
+
     const fetchProducts = async () => {
         try {
             const res = await fetch(`${API_URL}/products`);
@@ -182,6 +215,10 @@ export const TributeProvider = ({ children }) => {
 
     const showToast = (message, type = 'success') => {
         setToast({ message, type });
+    };
+
+    const showAlert = (message, type = 'info', title = '', onConfirm = null, onCancel = null, confirmText = 'Got it', cancelText = 'Cancel') => {
+        setAlertConfig({ message, type, title, onConfirm, onCancel, confirmText, cancelText });
     };
 
     const updateSettings = async (newSettings) => {
@@ -369,7 +406,10 @@ export const TributeProvider = ({ children }) => {
         try {
             const res = await fetch(`${API_URL}/menus/location/${location}`);
             const data = await res.json();
-            if (location === 'primary') setPrimaryMenu(data);
+            if (location === 'primary') {
+                setPrimaryMenu(data);
+                localStorage.setItem('tributoo_primary_menu', JSON.stringify(data));
+            }
             return data;
         } catch (e) { console.error(e); return null; }
     };
@@ -477,13 +517,16 @@ export const TributeProvider = ({ children }) => {
                 },
                 body: JSON.stringify(tributeData)
             });
-            if (!res.ok) throw new Error("Failed to add tribute");
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.error || "Failed to add tribute");
+            }
             const newTribute = await res.json();
             await fetchTributes();
             return newTribute;
         } catch (error) {
             console.error("Add tribute error:", error);
-            return null;
+            throw error;
         }
     };
 
@@ -497,7 +540,7 @@ export const TributeProvider = ({ children }) => {
         } catch (e) { console.error(e); }
     };
 
-    const updateTribute = async (id, updatedData) => {
+    const updateTribute = async (id, updatedData, silent = false) => {
         try {
             const res = await fetch(`${API_URL}/tributes/${id}`, {
                 method: 'PUT',
@@ -511,7 +554,7 @@ export const TributeProvider = ({ children }) => {
                 const err = await res.json();
                 throw new Error(err.error || "Update failed");
             }
-            await fetchTributes();
+            if (!silent) await fetchTributes();
             return true;
         } catch (e) {
             console.error("Update Tribute Error:", e);
@@ -530,7 +573,7 @@ export const TributeProvider = ({ children }) => {
         } catch (e) { console.error(e); }
     };
 
-    const addMedia = async (id, type, url) => {
+    const addMedia = async (id, type, url, silent = false) => {
         try {
             const res = await fetch(`${API_URL}/tributes/${id}/media`, {
                 method: 'POST',
@@ -540,11 +583,53 @@ export const TributeProvider = ({ children }) => {
                 },
                 body: JSON.stringify({ type, url })
             });
-            if (!res.ok) throw new Error("Upload failed");
-            await fetchTributes();
-            await fetchMedia();
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.error || "Upload failed");
+            }
+            if (!silent) {
+                await fetchTributes();
+                await fetchMedia();
+            }
             return true;
-        } catch (e) { console.error(e); return false; }
+        } catch (e) {
+            console.error("Add Media Error:", e);
+            throw e;
+        }
+    };
+
+    /**
+     * Efficiently uploads a file using FormData (binary) instead of Base64.
+     */
+    const uploadMediaFile = async (id, type, file, silent = false) => {
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('type', type);
+            if (id) formData.append('tribute_id', id);
+
+            const res = await fetch(`${API_URL}/media/upload`, {
+                method: 'POST',
+                headers: {
+                    ...getAuthHeaders(false) // false means don't force Content-Type: application/json
+                },
+                body: formData
+            });
+
+            if (!res.ok) {
+                const errData = await res.json().catch(() => ({}));
+                throw new Error(errData.error || "Upload failed");
+            }
+
+            if (!silent) {
+                await fetchTributes();
+                await fetchMedia();
+            }
+            return true;
+        } catch (e) {
+            console.error("Upload Media File Error:", e);
+            throw e;
+        }
     };
 
 
@@ -570,9 +655,16 @@ export const TributeProvider = ({ children }) => {
         } catch (e) { console.error(e); return false; }
     };
 
-    const incrementViewCount = (id) => {
-        setTributes(prev => prev.map(t => String(t.id) === String(id) ? { ...t, views: (t.views || 0) + 1 } : t));
-        updateTribute(id, { views: (tributes.find(t => String(t.id) === String(id))?.views || 0) + 1 });
+    const incrementViewCount = async (id) => {
+        try {
+            // Optimistic update
+            setTributes(prev => prev.map(t => String(t.id) === String(id) ? { ...t, views: (t.views || 0) + 1 } : t));
+
+            // Server update
+            await fetch(`${API_URL}/tributes/${id}/view`, { method: 'POST' });
+        } catch (e) {
+            console.error("Failed to increment view:", e);
+        }
     };
 
     const addToCart = (product, quantity = 1, metadata = {}) => {
@@ -603,21 +695,58 @@ export const TributeProvider = ({ children }) => {
         ));
     };
 
-    const clearCart = () => setCart([]);
+    const clearCart = () => {
+        setCart([]);
+        setAppliedCoupon(null);
+    };
+
+    const applyCoupon = async (code) => {
+        try {
+            const res = await fetch(`${BASE_API_URL}/api/vouchers/validate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            });
+            const data = await res.json();
+            if (data.success) {
+                setAppliedCoupon({
+                    code: data.code,
+                    discount: parseFloat(data.value)
+                });
+                showToast(data.message, 'success');
+                return { success: true };
+            } else {
+                showToast(data.error || "Failed to apply coupon", 'error');
+                return { success: false, error: data.error };
+            }
+        } catch (error) {
+            console.error("Apply Coupon Error:", error);
+            showToast("An error occurred. Please try again.", 'error');
+            return { success: false, error: "An error occurred" };
+        }
+    };
+
+    const removeCoupon = () => {
+        setAppliedCoupon(null);
+        showToast("Coupon removed", "info");
+    };
 
     return (
         <TributeContext.Provider value={{
             tributes, pages, posts, settings, media, primaryMenu, isInitialized,
-            addTribute, deleteTribute, updateTribute, incrementViewCount,
+            addTribute, deleteTribute, updateTribute, incrementViewCount, fetchTributes,
             addComment, removeComment, updateComment, fetchComments,
-            addMedia, uploadGlobalMedia, removeMedia, fetchMedia,
+            addMedia, uploadMediaFile, uploadGlobalMedia, removeMedia, updateMediaDetails, fetchMedia,
             updateSettings, fetchSettings,
             fetchPages, addPage, updatePage, deletePage,
             fetchPosts, addPost, updatePost, deletePost,
             fetchMenus, fetchMenu, addMenu, updateMenu, deleteMenu, fetchMenuByLocation,
             fetchProducts, addProduct, updateProduct, deleteProduct, products,
             showToast, toast, setToast, reorderMedia,
-            cart, addToCart, removeFromCart, updateCartQuantity, clearCart
+            showAlert, alertConfig, setAlertConfig,
+            cart, addToCart, removeFromCart, updateCartQuantity, clearCart,
+            appliedCoupon, applyCoupon, removeCoupon,
+            getAuthHeaders
         }}>
             {children}
         </TributeContext.Provider>

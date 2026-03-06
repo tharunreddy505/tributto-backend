@@ -11,13 +11,17 @@ import MediaPickerModal from '../../components/admin/MediaPickerModal';
 const EditPageAdmin = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { pages, addPage, updatePage, showToast } = useTributeContext();
+    const { pages, addPage, updatePage, showToast, showAlert } = useTributeContext();
 
     const [formData, setFormData] = useState({
         title: '',
         content: '',
         slug: '',
-        status: 'published'
+        status: 'published',
+        seo_title: '',
+        seo_description: '',
+        seo_keywords: '',
+        og_image: ''
     });
     const [loading, setLoading] = useState(false);
     const [isBuilderOpen, setIsBuilderOpen] = useState(false);
@@ -31,7 +35,11 @@ const EditPageAdmin = () => {
                     title: decodeHtml(page.title),
                     content: page.content || '',
                     slug: page.slug,
-                    status: page.status
+                    status: page.status,
+                    seo_title: page.seo_title || '',
+                    seo_description: page.seo_description || '',
+                    seo_keywords: page.seo_keywords || '',
+                    og_image: page.og_image || ''
                 });
             }
         }
@@ -131,9 +139,14 @@ const EditPageAdmin = () => {
                                         <button
                                             type="button"
                                             onClick={() => {
-                                                if (window.confirm('Switching to Manual Editor might break your Visual Builder layout. Continue?')) {
-                                                    setFormData({ ...formData, content: formData.content.replace(/<style>.*?<\/style>/s, '') });
-                                                }
+                                                showAlert(
+                                                    'Switching to Manual Editor might break your Visual Builder layout. Any custom styling from the builder will be removed. Continue?',
+                                                    'warning',
+                                                    'Switch Editor',
+                                                    () => {
+                                                        setFormData({ ...formData, content: formData.content.replace(/<style>.*?<\/style>/s, '') });
+                                                    }
+                                                );
                                             }}
                                             className="mt-4 text-xs text-red-400 hover:underline"
                                         >
@@ -188,12 +201,69 @@ const EditPageAdmin = () => {
                             )}
                         </div>
                     </div>
+
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 space-y-4">
+                        <h3 className="font-bold text-gray-700 border-b border-gray-100 pb-2">SEO Settings</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="md:col-span-2">
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Meta Title</label>
+                                <input
+                                    type="text"
+                                    value={formData.seo_title}
+                                    onChange={(e) => setFormData({ ...formData, seo_title: e.target.value })}
+                                    className="w-full border border-gray-200 rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
+                                    placeholder="Page title for search engines"
+                                />
+                            </div>
+                            <div className="md:col-span-2">
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Meta Description</label>
+                                <textarea
+                                    value={formData.seo_description}
+                                    onChange={(e) => setFormData({ ...formData, seo_description: e.target.value })}
+                                    className="w-full border border-gray-200 rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary h-24 resize-none"
+                                    placeholder="Brief summary for search results"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Keywords</label>
+                                <input
+                                    type="text"
+                                    value={formData.seo_keywords}
+                                    onChange={(e) => setFormData({ ...formData, seo_keywords: e.target.value })}
+                                    className="w-full border border-gray-200 rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
+                                    placeholder="Keywords separated by commas"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Social Image (OG Image)</label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        value={formData.og_image}
+                                        onChange={(e) => setFormData({ ...formData, og_image: e.target.value })}
+                                        className="flex-1 border border-gray-200 rounded px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-primary"
+                                        placeholder="Image URL"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setMediaPicker({
+                                            isOpen: true,
+                                            type: 'image',
+                                            callback: (url) => setFormData(prev => ({ ...prev, og_image: url }))
+                                        })}
+                                        className="bg-gray-100 px-3 py-1 rounded text-xs font-bold text-gray-600 hover:bg-gray-200"
+                                    >
+                                        Pick
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="space-y-6">
                     <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 space-y-4">
                         <h3 className="font-bold text-gray-700 border-b border-gray-100 pb-2">Publish Settings</h3>
-
                         <div>
                             <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Status</label>
                             <select
@@ -205,7 +275,6 @@ const EditPageAdmin = () => {
                                 <option value="draft">Draft</option>
                             </select>
                         </div>
-
                         <div>
                             <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Permalink / Slug</label>
                             <div className="relative">
@@ -228,7 +297,9 @@ const EditPageAdmin = () => {
                 type={mediaPicker.type}
                 onClose={() => setMediaPicker({ ...mediaPicker, isOpen: false })}
                 onSelect={(m) => {
-                    mediaPicker.callback(m.url, { title: m.name });
+                    if (mediaPicker.callback) {
+                        mediaPicker.callback(m.url, { title: m.name });
+                    }
                     setMediaPicker({ ...mediaPicker, isOpen: false });
                 }}
             />

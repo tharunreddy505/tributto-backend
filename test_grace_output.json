@@ -1,0 +1,38 @@
+[
+  {
+    "slug": "grace_period_day9",
+    "timing_reference": "trial_end",
+    "timing_delay_value": 9,
+    "timing_delay_unit": "days"
+  },
+  {
+    "slug": "grace_period_day9",
+    "timing_reference": "trial_end",
+    "timing_delay_value": 9,
+    "timing_delay_unit": "days"
+  },
+  {
+    "slug": "grace_period_day9",
+    "timing_reference": "trial_end",
+    "timing_delay_value": 9,
+    "timing_delay_unit": "days"
+  },
+  {
+    "slug": "grace_period_day10",
+    "timing_reference": "trial_end",
+    "timing_delay_value": 10,
+    "timing_delay_unit": "days"
+  },
+  {
+    "slug": "grace_period_day10",
+    "timing_reference": "trial_end",
+    "timing_delay_value": 10,
+    "timing_delay_unit": "days"
+  },
+  {
+    "slug": "grace_period_day10",
+    "timing_reference": "trial_end",
+    "timing_delay_value": 10,
+    "timing_delay_unit": "days"
+  }
+]

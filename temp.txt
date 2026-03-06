@@ -1,0 +1,37 @@
+[
+  {
+    "id": 20,
+    "status": "trial",
+    "trial_start": "2026-02-25T04:25:24.382Z",
+    "trial_end": "2026-03-04T04:25:24.382Z",
+    "current_db_time": "2026-02-25T04:38:46.913Z"
+  },
+  {
+    "id": 19,
+    "status": "trial",
+    "trial_start": "2026-02-25T04:06:03.624Z",
+    "trial_end": "2026-03-04T04:06:03.624Z",
+    "current_db_time": "2026-02-25T04:38:46.913Z"
+  },
+  {
+    "id": 18,
+    "status": "trial",
+    "trial_start": "2026-02-25T04:01:38.145Z",
+    "trial_end": "2026-03-04T04:01:38.145Z",
+    "current_db_time": "2026-02-25T04:38:46.913Z"
+  },
+  {
+    "id": 17,
+    "status": "trial",
+    "trial_start": "2026-02-25T04:00:37.889Z",
+    "trial_end": "2026-03-04T04:00:37.889Z",
+    "current_db_time": "2026-02-25T04:38:46.913Z"
+  },
+  {
+    "id": 16,
+    "status": "trial",
+    "trial_start": "2026-02-25T03:56:43.011Z",
+    "trial_end": "2026-03-04T03:56:43.011Z",
+    "current_db_time": "2026-02-25T04:38:46.913Z"
+  }
+]

@@ -8,6 +8,8 @@ import { Editor } from '@tinymce/tinymce-react';
 import MediaPickerModal from '../../components/admin/MediaPickerModal';
 import { API_URL } from '../../config';
 
+import { compressImage } from '../../utils/imageOptimizer';
+
 const EditPostAdmin = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -20,7 +22,11 @@ const EditPostAdmin = () => {
         status: 'published',
         featured_image: '',
         categories: [],
-        tags: []
+        tags: [],
+        seo_title: '',
+        seo_description: '',
+        seo_keywords: '',
+        og_image: ''
     });
     const [tagInput, setTagInput] = useState('');
 
@@ -59,7 +65,11 @@ const EditPostAdmin = () => {
                     status: post.status,
                     featured_image: post.featured_image || '',
                     categories: post.categories || [],
-                    tags: post.tags || []
+                    tags: post.tags || [],
+                    seo_title: post.seo_title || '',
+                    seo_description: post.seo_description || '',
+                    seo_keywords: post.seo_keywords || '',
+                    og_image: post.og_image || ''
                 });
             }
         }
@@ -70,23 +80,25 @@ const EditPostAdmin = () => {
         setLoading(true);
         if (id) {
             await updatePost(id, formData);
-            showToast("Post updated successfully!", "success");
+            showToast("Blog updated successfully!", "success");
         } else {
             await addPost(formData);
-            showToast("Post created successfully!", "success");
+            showToast("Blog created successfully!", "success");
         }
         setLoading(false);
         navigate('/admin/posts');
     };
 
-    const handleImageUpload = (e) => {
+    const handleImageUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setFormData({ ...formData, featured_image: reader.result });
-            };
-            reader.readAsDataURL(file);
+            try {
+                // Optimize featured image: 1200px max
+                const optimizedImage = await compressImage(file, { maxWidth: 1200, quality: 0.8 });
+                setFormData({ ...formData, featured_image: optimizedImage });
+            } catch (err) {
+                console.error("Error optimizing featured image:", err);
+            }
         }
     };
 
@@ -154,7 +166,7 @@ const EditPostAdmin = () => {
                     <Link to="/admin/posts" className="w-10 h-10 rounded-full bg-white shadow-sm border border-gray-100 flex items-center justify-center text-gray-500 hover:text-primary transition-colors">
                         <FontAwesomeIcon icon={faArrowLeft} />
                     </Link>
-                    <h2 className="text-2xl font-bold text-gray-800">{id ? 'Edit Post' : 'Add New Post'}</h2>
+                    <h2 className="text-2xl font-bold text-gray-800">{id ? 'Edit Blog' : 'Add New Blog'}</h2>
                 </div>
                 <div className="flex gap-3">
                     <button
@@ -163,7 +175,7 @@ const EditPostAdmin = () => {
                         className="bg-primary text-white px-6 py-2 rounded-md font-bold hover:bg-opacity-90 transition-all flex items-center gap-2 disabled:opacity-50"
                     >
                         <FontAwesomeIcon icon={faSave} />
-                        {loading ? 'Saving...' : 'Save Post'}
+                        {loading ? 'Saving...' : 'Save Blog'}
                     </button>
                 </div>
             </div>
@@ -172,14 +184,14 @@ const EditPostAdmin = () => {
                 <div className="lg:col-span-2 space-y-6">
                     <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 space-y-4">
                         <div>
-                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Post Title</label>
+                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Blog Title</label>
                             <input
                                 type="text"
                                 value={formData.title}
                                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                                 onBlur={!id ? generateSlug : undefined}
                                 className="w-full text-xl font-bold border-b border-gray-200 py-2 outline-none focus:border-primary transition-colors"
-                                placeholder="Enter post title"
+                                placeholder="Enter blog title"
                                 required
                             />
                         </div>
@@ -214,6 +226,64 @@ const EditPostAdmin = () => {
                             />
                         </div>
                     </div>
+
+                    <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-6 space-y-4">
+                        <h3 className="font-bold text-gray-700 border-b border-gray-100 pb-2">SEO Settings</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="md:col-span-2">
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Meta Title</label>
+                                <input
+                                    type="text"
+                                    value={formData.seo_title}
+                                    onChange={(e) => setFormData({ ...formData, seo_title: e.target.value })}
+                                    className="w-full border border-gray-200 rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
+                                    placeholder="Blog title for search engines"
+                                />
+                            </div>
+                            <div className="md:col-span-2">
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Meta Description</label>
+                                <textarea
+                                    value={formData.seo_description}
+                                    onChange={(e) => setFormData({ ...formData, seo_description: e.target.value })}
+                                    className="w-full border border-gray-200 rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary h-24 resize-none"
+                                    placeholder="Brief summary for search results"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Keywords</label>
+                                <input
+                                    type="text"
+                                    value={formData.seo_keywords}
+                                    onChange={(e) => setFormData({ ...formData, seo_keywords: e.target.value })}
+                                    className="w-full border border-gray-200 rounded px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
+                                    placeholder="Keywords separated by commas"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Social Image (OG Image)</label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        value={formData.og_image}
+                                        onChange={(e) => setFormData({ ...formData, og_image: e.target.value })}
+                                        className="flex-1 border border-gray-200 rounded px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-primary"
+                                        placeholder="Image URL"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => setMediaPicker({
+                                            isOpen: true,
+                                            type: 'image',
+                                            callback: (url) => setFormData(prev => ({ ...prev, og_image: url }))
+                                        })}
+                                        className="bg-gray-100 px-3 py-1 rounded text-xs font-bold text-gray-600 hover:bg-gray-200"
+                                    >
+                                        Pick
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="space-y-6">
@@ -241,7 +311,7 @@ const EditPostAdmin = () => {
                                     value={formData.slug}
                                     onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                                     className="w-full pl-8 pr-3 py-2 border border-gray-200 rounded text-xs outline-none focus:ring-1 focus:ring-primary"
-                                    placeholder="post-slug"
+                                    placeholder="blog-slug"
                                 />
                             </div>
                         </div>
@@ -365,7 +435,9 @@ const EditPostAdmin = () => {
                 type={mediaPicker.type}
                 onClose={() => setMediaPicker({ ...mediaPicker, isOpen: false })}
                 onSelect={(m) => {
-                    mediaPicker.callback(m.url, { title: m.name });
+                    if (mediaPicker.callback) {
+                        mediaPicker.callback(m.url, { title: m.name });
+                    }
                     setMediaPicker({ ...mediaPicker, isOpen: false });
                 }}
             />

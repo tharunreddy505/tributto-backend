@@ -239,5 +239,76 @@
         "bio_quote": "Un'anima così gentile, un cuore così puro",
         "closing_quote": "Coloro che amiamo non se ne vanno, ci camminano accanto ogni giorno.",
         "closing_tribute": "La luce di {{firstName}} continuerà a brillare attraverso l'amore che ha donato, la saggezza che ha condiviso e le innumerevoli vite che ha toccato. Che il suo ricordo sia una benedizione per tutti coloro che l'hanno conosciuta."
+    },
+    "create_memorial": {
+        "profile_photo": "Foto del profilo",
+        "cover_photo": "Foto di copertina",
+        "click_icons": "Fai clic sulle icone per caricare le foto",
+        "full_name": "Nome completo",
+        "name_known_by": "Il nome con cui erano conosciuti",
+        "dob": "Data di nascita",
+        "passed_away": "Deceduto/a",
+        "pub_status": "Stato di pubblicazione",
+        "public": "Pubblico",
+        "private": "Privato",
+        "public_desc": "Tutti possono vedere questo memoriale.",
+        "private_desc": "Solo le persone con il link diretto possono vederlo.",
+        "note": "Nota:",
+        "login_note": "Dopo aver inserito i dettagli, ti verrà chiesto di registrarti/accedere prima di completare il memoriale.",
+        "life_story": "Storia della vita",
+        "story_desc": "Scrivi con il cuore, non c'è un modo giusto o sbagliato.",
+        "story_placeholder": "Prenditi il tuo tempo per raccontare cosa li ha resi così speciali... la loro infanzia, le loro passioni, come hanno toccato la vita degli altri...",
+        "photos_videos": "Foto e video (facoltativo)",
+        "add_photos": "Aggiungi foto",
+        "add_videos": "Aggiungi video",
+        "video_urls": "URL video (YouTube, Vimeo, ecc.)",
+        "add_url": "Aggiungi un altro URL video",
+        "almost_there": "Ci siamo quasi!",
+        "ready": "I dettagli della tua pagina commemorativa sono pronti. Fai clic su \"Avvia pagina commemorativa\" per iniziare la prova gratuita di 7 giorni e pubblicarla.",
+        "back": "Indietro",
+        "cancel": "Annulla",
+        "continue": "Continua",
+        "launch": "Avvia pagina commemorativa",
+        "creating": "Creazione in corso..."
+    },
+    "pricing": {
+        "title_line1": "Prezzi semplici e",
+        "title_line2": "trasparenti",
+        "description": "Scegli il piano giusto per onorare la memoria del tuo caro.",
+        "free": {
+            "title": "Pacchetto Gratuito",
+            "price": "0",
+            "period": "Gratis per sempre",
+            "features": [
+                "Pagina commemorativa online",
+                "Foto limitate (5 immagini)",
+                "1 amministratore"
+            ],
+            "button": "Inizia Gratis"
+        },
+        "premium": {
+            "title": "Pacchetto Premium",
+            "price": "99",
+            "period": "Pagamento unico",
+            "features": [
+                "Targa QR fisica",
+                "Media illimitati",
+                "Amministratori multipli",
+                "Disponibilità a vita"
+            ],
+            "button": "Passa a Premium",
+            "popular": "Più Popolare"
+        },
+        "corporate": {
+            "title": "Pacchetto Corporate",
+            "price": "Personalizzato",
+            "period": "Prezzi da definire",
+            "features": [
+                "Dashboard aziendale",
+                "Pagine commemorative multiple",
+                "Amministratori aziendali multipli"
+            ],
+            "button": "Contatta le Vendite"
+        }
     }
 }

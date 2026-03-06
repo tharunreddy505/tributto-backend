@@ -26,12 +26,20 @@ import AccountAdmin from './pages/admin/AccountAdmin';
 import ProductsAdmin from './pages/admin/ProductsAdmin';
 import EditProductAdmin from './pages/admin/EditProductAdmin';
 import VoucherTemplateAdmin from './pages/admin/VoucherTemplateAdmin';
+import EmailTemplatesAdmin from './pages/admin/EmailTemplatesAdmin';
+import MemorialStatsAdmin from './pages/admin/MemorialStatsAdmin';
+import SubscriptionAdmin from './pages/admin/SubscriptionAdmin';
+import SubscriptionsListAdmin from './pages/admin/SubscriptionsListAdmin';
+import EmailLogsAdmin from './pages/admin/EmailLogsAdmin';
 import Shop from './pages/Shop';
 import ProductPage from './pages/ProductPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import AuthorPage from './pages/AuthorPage';
 import { useTributeContext } from './context/TributeContext';
 import Toast from './components/ui/Toast';
+import AlertModal from './components/ui/AlertModal';
 
 const supportedLanguages = ['en', 'de', 'it'];
 
@@ -71,7 +79,7 @@ const AppRoutes = () => {
       <Route path="product/:id" element={<ProductPage />} />
       <Route path="cart" element={<CartPage />} />
       <Route path="checkout" element={<CheckoutPage />} />
-      <Route path="post/:slug" element={<PostView />} />
+      <Route path="blog/:slug" element={<PostView />} />
       <Route path="login" element={<AuthPage mode="login" />} />
       <Route path="register" element={<AuthPage mode="register" />} />
       <Route path=":slug" element={<PageView />} />
@@ -88,7 +96,8 @@ const ProtectedRoute = ({ children, adminOnly = false }) => {
     return <Navigate to="/login" replace />;
   }
 
-  const isAdmin = user.role === 'admin' || user.username === 'admin' || user.email?.includes('admin');
+  const isSuperAdmin = user.is_super_admin === true;
+  const isAdmin = user.role === 'admin' || isSuperAdmin || user.username === 'admin' || (user.email && user.email.includes('admin'));
 
   if (adminOnly && !isAdmin) {
     return <Navigate to="/admin" replace />;
@@ -101,6 +110,36 @@ const GlobalToast = () => {
   const { toast, setToast } = useTributeContext();
   if (!toast) return null;
   return <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />;
+};
+
+const GlobalAlert = () => {
+  const { alertConfig, setAlertConfig } = useTributeContext();
+  if (!alertConfig) return null;
+
+  const handleClose = () => {
+    const onConfirm = alertConfig.onConfirm;
+    setAlertConfig(null);
+    if (onConfirm) onConfirm();
+  };
+
+  const handleCancel = () => {
+    const onCancel = alertConfig.onCancel;
+    setAlertConfig(null);
+    if (onCancel) onCancel();
+  };
+
+  return (
+    <AlertModal
+      isOpen={!!alertConfig}
+      onClose={handleClose}
+      onCancel={alertConfig.onCancel ? handleCancel : null}
+      title={alertConfig.title}
+      message={alertConfig.message}
+      type={alertConfig.type}
+      confirmText={alertConfig.confirmText}
+      cancelText={alertConfig.cancelText}
+    />
+  );
 };
 
 function App() {
@@ -133,8 +172,20 @@ function App() {
           <Route path="products/edit/:id" element={<ProtectedRoute adminOnly><EditProductAdmin /></ProtectedRoute>} />
           <Route path="orders" element={<ProtectedRoute adminOnly><OrdersListAdmin /></ProtectedRoute>} />
           <Route path="voucher-templates" element={<ProtectedRoute adminOnly><VoucherTemplateAdmin /></ProtectedRoute>} />
+          <Route path="email-templates" element={<ProtectedRoute adminOnly><EmailTemplatesAdmin /></ProtectedRoute>} />
+          <Route path="email-logs" element={<ProtectedRoute adminOnly><EmailLogsAdmin /></ProtectedRoute>} />
+          <Route path="subscriptions" element={<ProtectedRoute adminOnly><SubscriptionsListAdmin /></ProtectedRoute>} />
+          <Route path="subscription" element={<SubscriptionAdmin />} />
+          <Route path="subscription/:id" element={<SubscriptionAdmin />} />
+          <Route path="my-account" element={<MemorialStatsAdmin />} />
           <Route path="account" element={<AccountAdmin />} />
         </Route>
+
+        {/* Password Reset - global, not localized */}
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+        {/* Author Profile - global, not localized */}
+        <Route path="/author/:username" element={<AuthorPage />} />
 
         {/* Explicit Language Routes - ONLY match if path starts with /de/ or /it/ */}
         <Route path="/de/*" element={<LanguageWrapper lang="de"><AppRoutes /></LanguageWrapper>} />
@@ -147,6 +198,7 @@ function App() {
         <Route path="/*" element={<LanguageWrapper lang="en"><AppRoutes /></LanguageWrapper>} />
       </Routes>
       <GlobalToast />
+      <GlobalAlert />
     </Router>
   );
 }

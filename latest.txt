@@ -1,0 +1,27 @@
+[
+  {
+    "id": 31,
+    "name": "trial4",
+    "created_at": "2026-02-24T15:42:00.414Z"
+  },
+  {
+    "id": 30,
+    "name": "trial3",
+    "created_at": "2026-02-24T15:09:54.305Z"
+  },
+  {
+    "id": 29,
+    "name": "trial2",
+    "created_at": "2026-02-24T15:04:27.141Z"
+  },
+  {
+    "id": 28,
+    "name": "free trial",
+    "created_at": "2026-02-24T15:00:09.325Z"
+  },
+  {
+    "id": 17,
+    "name": "gbr",
+    "created_at": "2026-02-23T12:11:57.796Z"
+  }
+]

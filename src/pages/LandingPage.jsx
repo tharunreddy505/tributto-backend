@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useTributeContext } from '../context/TributeContext';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Hero from '../components/sections/Hero';
 import Tributes from '../components/sections/Tributes';
 import WhyChoose from '../components/sections/WhyChoose';
 import MemorialCreation from '../components/sections/MemorialCreation';
 import Features from '../components/sections/Features';
+import Pricing from '../components/sections/Pricing';
 import FAQ from '../components/sections/FAQ';
 import CreateMemorialModal from '../components/create/CreateMemorialModal';
 import VisualBuilder from '../components/admin/VisualBuilder';
@@ -13,15 +15,54 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import heroImage from '../assets/images/hero-image.png';
 import howItWorksImage from '../assets/images/HowItWorks.png';
+import SEO from '../components/SEO';
 
 const LandingPage = () => {
-    const { pages, addPage, updatePage } = useTributeContext();
+    const { pages, addPage, updatePage, tributes, products, addToCart, showToast, showAlert } = useTributeContext();
+    const location = useLocation();
+    const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditMode, setIsEditMode] = useState(false);
+    const [selectedPackage, setSelectedPackage] = useState('free');
 
     // Admin Check
     const user = JSON.parse(localStorage.getItem('user') || '{}');
     const isAdmin = user.role === 'admin' || user.username === 'admin' || user.email?.includes('admin');
+    const isLoggedIn = !!localStorage.getItem('token') && !!user.id;
+
+    // Central handler for "Create a Tribute" clicks
+    const handleOpenCreate = (pkg = 'free') => {
+        const selectedPkg = typeof pkg === 'string' ? pkg : 'free';
+
+        if (isLoggedIn) {
+            const userMemorials = tributes.filter(t => String(t.userId) === String(user.id) || String(t.user_id) === String(user.id));
+            const hasReachedFreeLimit = userMemorials.length >= 1;
+
+            if (selectedPkg === 'free' && hasReachedFreeLimit && !isAdmin) {
+                // Show error if they try to create another free memorial
+                showAlert(
+                    'Free version limited to 1 memorial page. Please upgrade to a Premium or Corporate package for more.',
+                    'error',
+                    'Limit Reached',
+                    () => {
+                        const pricingSection = document.getElementById('pricing');
+                        if (pricingSection) {
+                            pricingSection.scrollIntoView({ behavior: 'smooth' });
+                        }
+                    }
+                );
+                return;
+            }
+
+            setSelectedPackage(selectedPkg);
+            // Already logged in → open the form modal
+            setIsModalOpen(true);
+        } else {
+            setSelectedPackage(selectedPkg);
+            // Not logged in → go to register, then come back to open modal
+            navigate(`/register?redirect=create-memorial&package=${selectedPkg}`);
+        }
+    };
 
     // Find dynamic home page
     const homePage = pages.find(p => p.slug === 'home' && p.status === 'published');
@@ -37,20 +78,29 @@ const LandingPage = () => {
         window.location.reload();
     };
 
+    // Auto-open memorial modal if redirected back from register/login
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+        if (params.get('openModal') === 'create-memorial') {
+            const pkg = params.get('package') || 'free';
+            setSelectedPackage(pkg);
+            setIsModalOpen(true);
+            window.history.replaceState({}, '', '/');
+        }
+    }, [location.search]);
+
     // Effect to handle clicks from injected HTML (like 'Create a Tribute' buttons)
     useEffect(() => {
         const handleCreateClick = (e) => {
-            // Traverse up to find if a click came from a trigger
             const trigger = e.target.closest('.js-create-memorial');
             if (trigger) {
                 e.preventDefault();
-                setIsModalOpen(true);
+                handleOpenCreate();
             }
         };
-
         document.addEventListener('click', handleCreateClick);
         return () => document.removeEventListener('click', handleCreateClick);
-    }, []);
+    }, [isLoggedIn]);
 
     // Default HTML Template for new custom homepages
     // replicating the original design using Tailwind CSS and HTML
@@ -410,6 +460,12 @@ const LandingPage = () => {
 
     return (
         <div className="relative">
+            <SEO
+                title={homePage?.seo_title}
+                description={homePage?.seo_description}
+                keywords={homePage?.seo_keywords}
+                ogImage={homePage?.og_image}
+            />
             {/* Admin Edit Button */}
             {isAdmin && (
                 <button
@@ -425,24 +481,22 @@ const LandingPage = () => {
                 <RenderContentWithShortcodes content={homePage.content} />
             ) : (
                 <>
-                    <Hero onOpenModal={() => setIsModalOpen(true)} />
+                    <Hero onOpenModal={handleOpenCreate} />
                     <Tributes />
                     <WhyChoose />
-                    <MemorialCreation onOpenModal={() => setIsModalOpen(true)} />
+                    <MemorialCreation onOpenModal={handleOpenCreate} />
                     <Features />
+                    <Pricing onOpenModal={handleOpenCreate} />
                     <FAQ />
 
-                    <CreateMemorialModal
-                        isOpen={isModalOpen}
-                        onClose={() => setIsModalOpen(false)}
-                    />
                 </>
             )}
 
-            {/* Modal for when triggered from custom HTML */}
+            {/* Modal for when triggered from custom HTML or default home */}
             <CreateMemorialModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
+                selectedPackage={selectedPackage}
             />
         </div>
     );

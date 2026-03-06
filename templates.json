@@ -1,0 +1,117 @@
+[
+  {
+    "slug": "subscription_expired",
+    "name": "Subscription Expired Notification",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "subscription_expiry_reminder",
+    "name": "Expiry Reminder",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "trial_expired_reminder",
+    "name": "7-Day Trial Expired Reminder",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "trial_expired_reminder",
+    "name": "Zahlungserinnerung (DE)",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "welcome_trial",
+    "name": "Trial Welcome Email",
+    "timing_type": "event_only"
+  },
+  {
+    "slug": "voucher_delivery",
+    "name": "Voucher Delivery",
+    "timing_type": "event_only"
+  },
+  {
+    "slug": "subscription_expiry_reminder",
+    "name": "Ablaufwarnung (DE)",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "subscription_expiry_reminder",
+    "name": "Avviso di scadenza (IT)",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "trial_expired_reminder",
+    "name": "Promemoria di pagamento (IT)",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "subscription_expired",
+    "name": "Abonnement abgelaufen (DE)",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "subscription_expired",
+    "name": "Abbonamento scaduto (IT)",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "welcome_trial",
+    "name": "Willkommen (DE)",
+    "timing_type": "event_only"
+  },
+  {
+    "slug": "welcome_trial",
+    "name": "Benvenuto (IT)",
+    "timing_type": "event_only"
+  },
+  {
+    "slug": "trial_5_days_reminder",
+    "name": "Trial 5 Days Reminder",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "payment_confirmation",
+    "name": "Payment Confirmation",
+    "timing_type": "event_only"
+  },
+  {
+    "slug": "trial_5_days_reminder",
+    "name": "Trial 5 Days Reminder",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "trial_5_days_reminder",
+    "name": "Trial 5 Days Reminder",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "grace_period_day9",
+    "name": "Grace Period Reminder (Day 9)",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "grace_period_day9",
+    "name": "Kulanzzeit-Erinnerung (Tag 9)",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "grace_period_day9",
+    "name": "Promemoria Periodo di Grazia (Giorno 9)",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "grace_period_day10",
+    "name": "Grace Period Final Warning (Day 10)",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "grace_period_day10",
+    "name": "Letzte Kulanzzeit-Warnung (Tag 10)",
+    "timing_type": "delayed"
+  },
+  {
+    "slug": "grace_period_day10",
+    "name": "Avviso Finale Periodo di Grazia (Giorno 10)",
+    "timing_type": "delayed"
+  }
+]

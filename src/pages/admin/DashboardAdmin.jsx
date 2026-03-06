@@ -36,7 +36,7 @@ const DashboardAdmin = () => {
     const growth = displayedTributes.length > 0 ? Math.round((newTributes / displayedTributes.length) * 100) : 0;
 
     const stats = [
-        { title: 'My Memorials', value: displayedTributes.length, icon: faBookOpen, color: 'bg-blue-500' },
+        { title: 'Memorial Pages', value: displayedTributes.length, icon: faBookOpen, color: 'bg-blue-500' },
         { title: 'Total Visits', value: totalVisits.toLocaleString(), icon: faUsers, color: 'bg-green-500' },
         { title: 'Tribute Entries', value: totalComments, icon: faCommentAlt, color: 'bg-yellow-500' },
         { title: 'New (30 Days)', value: `+${growth}%`, icon: faChartLine, color: 'bg-purple-500' },
@@ -88,7 +88,13 @@ const DashboardAdmin = () => {
                                             </td>
                                             <td className="px-6 py-4">{tribute.createdAt ? new Date(tribute.createdAt).toLocaleDateString() : 'N/A'}</td>
                                             <td className="px-6 py-4">
-                                                <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-semibold">Published</span>
+                                                {tribute.subscriptionStatus === 'active' || tribute.isLifetime || tribute.userId === user.id ? (
+                                                    <span className="bg-green-100 text-green-700 px-2 py-1 rounded text-xs font-semibold">Published</span>
+                                                ) : tribute.subscriptionStatus === 'expired' ? (
+                                                    <span className="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-semibold">Expired (Draft)</span>
+                                                ) : (
+                                                    <span className="bg-gray-100 text-gray-700 px-2 py-1 rounded text-xs font-semibold">Draft</span>
+                                                )}
                                             </td>
                                             <td className="px-6 py-4 text-right">
                                                 <Link to={`/admin/memorials/edit/${tribute.id}`} className="text-blue-600 hover:text-blue-800 mr-3">Edit</Link>
@@ -112,7 +118,7 @@ const DashboardAdmin = () => {
                     {isAdmin && (
                         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
                             <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-                                <h3 className="font-bold text-gray-700">Recent Posts</h3>
+                                <h3 className="font-bold text-gray-700">Recent Blogs</h3>
                                 <Link to="/admin/posts" className="text-xs text-primary font-medium hover:underline">View All</Link>
                             </div>
                             <div className="overflow-x-auto">
@@ -144,14 +150,14 @@ const DashboardAdmin = () => {
                                                 </td>
                                                 <td className="px-6 py-4 text-right">
                                                     <Link to={`/admin/posts/edit/${post.id}`} className="text-blue-600 hover:text-blue-800 mr-3 text-xs font-bold">Edit</Link>
-                                                    <Link to={`/post/${post.slug}`} className="text-gray-400 hover:text-gray-600 text-xs font-bold">View</Link>
+                                                    <Link to={`/blog/${post.slug}`} className="text-gray-400 hover:text-gray-600 text-xs font-bold">View</Link>
                                                 </td>
                                             </tr>
                                         ))}
                                         {posts.length === 0 && (
                                             <tr>
                                                 <td colSpan="3" className="px-6 py-8 text-center text-gray-400">
-                                                    No posts found. <Link to="/admin/posts/new" className="text-primary hover:underline">Write one.</Link>
+                                                    No blogs found. <Link to="/admin/posts/new" className="text-primary hover:underline">Write one.</Link>
                                                 </td>
                                             </tr>
                                         )}

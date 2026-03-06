@@ -5,7 +5,7 @@ import { faPlus, faEdit, faTrash, faEye, faSearch, faFileAlt } from '@fortawesom
 import { useTributeContext } from '../../context/TributeContext';
 
 const PagesListAdmin = () => {
-    const { pages, deletePage } = useTributeContext();
+    const { pages, deletePage, showAlert, showToast } = useTributeContext();
 
     return (
         <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
@@ -75,9 +75,10 @@ const PagesListAdmin = () => {
                                         className="inline-flex items-center justify-center w-8 h-8 rounded-full hover:bg-red-50 text-gray-500 hover:text-red-600 transition-colors"
                                         title="Delete"
                                         onClick={() => {
-                                            if (window.confirm('Are you sure you want to delete this page?')) {
-                                                deletePage(page.id);
-                                            }
+                                            showAlert("Are you sure you want to delete this page? This action cannot be undone.", "error", "Confirm Delete", async () => {
+                                                const success = await deletePage(page.id);
+                                                if (success) showToast("Page deleted successfully");
+                                            });
                                         }}
                                     >
                                         <FontAwesomeIcon icon={faTrash} />

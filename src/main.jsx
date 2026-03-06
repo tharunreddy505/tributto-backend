@@ -5,10 +5,14 @@ import './index.css'
 import './i18n';
 import { TributeProvider } from './context/TributeContext';
 
+import { HelmetProvider } from 'react-helmet-async';
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <TributeProvider>
-      <App />
+      <HelmetProvider>
+        <App />
+      </HelmetProvider>
     </TributeProvider>
   </React.StrictMode>,
 )
